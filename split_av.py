@@ -45,8 +45,8 @@ def run():
 
     file_name = sys.argv[ 1 ]
     output_dir = sys.argv[ 2 ]
-    num_splits = sys.argv[ 3 ]
-    video_len = sys.argv[ 4 ]       # We should read this from file
+    num_splits = int( sys.argv[ 3 ] )
+    video_len = int( sys.argv[ 4 ] )       # We should read this from file
 
     results = split_video( file_name, output_dir, num_splits, video_len )
     print( results )
