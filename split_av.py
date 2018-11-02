@@ -65,6 +65,7 @@ def split_video_by_keyframes( input_file, output_dir, num_splits, video_len ):
     keyframes = ffmpeg.list_keyframes( input_file, output_dir )
 
     results = []
+    split_points = []
 
     split_len = video_len / num_splits
     prev_end_time = 0.0
@@ -84,8 +85,9 @@ def split_video_by_keyframes( input_file, output_dir, num_splits, video_len ):
         ffmpeg.extract_video_part( input_file, output_file, start_time, end_time )
 
         results.append( output_file )
+        split_points.append( end_time )
 
-    return results
+    return results, split_points
 
 ######################################
 ##
