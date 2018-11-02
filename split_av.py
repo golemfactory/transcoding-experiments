@@ -2,9 +2,28 @@ import sys
 import os
 
 import ffmpeg_commands as ffmpeg
+from bisect import bisect_left
 
 
+######################################
+## https://stackoverflow.com/questions/12141150/from-list-of-integers-get-number-closest-to-a-given-value
+def take_closest(myList, myNumber):
+    """
+    Assumes myList is sorted. Returns closest value to myNumber.
 
+    If two numbers are equally close, return the smallest number.
+    """
+    pos = bisect_left(myList, myNumber)
+    if pos == 0:
+        return myList[0]
+    if pos == len(myList):
+        return myList[-1]
+    before = myList[pos - 1]
+    after = myList[pos]
+    if after - myNumber < myNumber - before:
+       return after
+    else:
+       return before
 
 ######################################
 ##
@@ -38,6 +57,35 @@ def split_video( input_file, output_dir, num_splits, video_len ):
 
     return results
 
+
+######################################
+##
+def split_video_by_keyframes( input_file, output_dir, num_splits, video_len ):
+
+    keyframes = ffmpeg.list_keyframes( input_file, output_dir )
+
+    results = []
+
+    split_len = video_len / num_splits
+    prev_end_time = 0.0
+
+    for split in range( 0, num_splits ):
+
+        start_time = prev_end_time
+        end_time = ( split + 1 ) * split_len
+        end_time = take_closest( keyframes, end_time )
+
+        # end_time from this iteration will be start_time from next iteration.
+        prev_end_time = end_time
+
+        file_name = create_splitted_filename( input_file, start_time, end_time )
+        output_file = os.path.join( output_dir, file_name )
+
+        ffmpeg.extract_video_part( input_file, output_file, start_time, end_time )
+
+        results.append( output_file )
+
+    return results
 
 ######################################
 ##
