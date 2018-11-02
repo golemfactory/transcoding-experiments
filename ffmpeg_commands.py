@@ -4,16 +4,17 @@ import datetime
 
 
 FFMPEG_COMMAND = "ffmpeg"
+FFPROBE_COMMAND = "ffprobe"
 
 
 ######################################
 ##
-def exec_cmd(cmd):
+def exec_cmd(cmd, file=None):
 
     print( "Executing command:" )
     print( cmd )
 
-    pc = subprocess.Popen(cmd)
+    pc = subprocess.Popen(cmd, stdout=file)
     return pc.wait()
 
 ######################################
@@ -29,9 +30,11 @@ def extract_video_part_command( input, output, start_time, end_time ):
 
     cmd = [ FFMPEG_COMMAND,
         "-ss", "{}".format( start_time ),
+        "-noaccurate_seek",
         "-i", "{}".format( input ),
-        "-t", "{}".format( end_time - start_time ),
-        "-c", "copy",
+        "-to", "{}".format( end_time ),
+        "-c", "copy", "-copyts",
+        "-avoid_negative_ts", "1",
         output
     ]
 
@@ -71,6 +74,20 @@ def merge_videos_command( input_files, output ):
 
     return cmd, list_file
 
+######################################
+##
+def list_keyframes_command( input ):
+
+    cmd = [ FFPROBE_COMMAND,
+        "-loglevel", "quiet",
+        "-skip_frame", "nokey",
+        "-select_streams", "v:0",
+        "-show_entries", "frame=pkt_pts_time",
+        "-of", "csv=print_section=0",
+        input
+    ]
+
+    return cmd
 
 ######################################
 ##
@@ -87,6 +104,30 @@ def merge_videos( input_files, output ):
     exec_cmd( cmd )
 
     # remove temporary file with merge list
-    #os.remove( list_file )
+    os.remove( list_file )
 
+######################################
+##
+def list_keyframes( input, tmp_dir ):
 
+    keyframes = []
+
+    # Prepare temporary file with keyframes list.
+    [ _, filename ] = os.path.split( input )
+    keyframes_list_file = os.path.join( tmp_dir, filename + ".keyframes" )
+
+    cmd = list_keyframes_command( input )
+    
+    with open( keyframes_list_file, "wb" ) as f:
+        exec_cmd( cmd, f )
+    
+    with open( keyframes_list_file ) as f:
+        
+        lines = f.read().splitlines()
+        keyframes = [ float( line ) for line in lines ]
+
+    # remove temporary file with keyframes list
+    os.remove( keyframes_list_file )
+
+    keyframes.sort()
+    return keyframes
