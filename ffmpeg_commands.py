@@ -32,13 +32,29 @@ def extract_video_part_command( input, output, start_time, end_time ):
         "-ss", "{}".format( start_time ),
         # "-noaccurate_seek",
         "-i", "{}".format( input ),
-        "-to", "{}".format( end_time ),
+        "-t", "{}".format( end_time - start_time ),
         "-c", "copy",# "-copyts",
         "-avoid_negative_ts", "1",
         output
     ]
 
     return cmd
+
+######################################
+##
+def split_video_command( input, output, segment_time ):
+
+    output_list_file = output
+
+    cmd = [ FFMPEG_COMMAND,
+        "-i", input,
+        "-c:v", "h264",
+        "-flags", "+cgop", "-g", "30",
+        "-hls_time", "{}".format( segment_time ),
+        output_list_file
+    ]
+
+    return cmd, output_list_file
 
 ######################################
 ##
@@ -95,6 +111,15 @@ def extract_video_part( input, output, start_time, end_time ):
 
     cmd = extract_video_part_command( input, output, start_time, end_time )
     exec_cmd( cmd )
+
+######################################
+##
+def split_video( input, output, segment_time ):
+
+    cmd, file_list = split_video_command( input, output, segment_time )
+    exec_cmd( cmd )
+
+    return file_list
 
 ######################################
 ##

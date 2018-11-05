@@ -74,13 +74,18 @@ def split_video_by_keyframes( input_file, output_dir, num_splits, video_len ):
 
         start_time = prev_end_time
         end_time = ( split + 1 ) * split_len
-        end_time = take_closest( keyframes, end_time )
+
+        # Take closest keyframe if it's not last split.
+        if split == num_splits - 1:
+            end_time = video_len
+        else:
+            end_time = take_closest( keyframes, end_time )
 
         # end_time from this iteration will be start_time from next iteration.
         # Move timestamp one frame forward. Otherwise ffmpeg will include video
         # from last keyframe.
         # TODO: Find way to compute magic number 0.1 depending on video frame rate.
-        prev_end_time = end_time + 0.1
+        prev_end_time = end_time# + 0.1
 
         file_name = create_splitted_filename( input_file, start_time, end_time )
         output_file = os.path.join( output_dir, file_name )
@@ -91,6 +96,19 @@ def split_video_by_keyframes( input_file, output_dir, num_splits, video_len ):
         split_points.append( end_time )
 
     return results, split_points
+
+######################################
+##
+def split_video_ffmpeg_function( input_file, output_dir, split_len ):
+
+    [ _, filename ] = os.path.split( input_file )
+    [basename, extension] = os.path.splitext( filename )
+    output_name = os.path.join( output_dir, basename + ".m3u8" )
+    
+    split_list_file = ffmpeg.split_video( input_file, output_name, split_len )
+    return split_list_file
+
+
 
 ######################################
 ##
