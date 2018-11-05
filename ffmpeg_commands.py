@@ -30,7 +30,7 @@ def extract_video_part_command( input, output, start_time, end_time ):
 
     cmd = [ FFMPEG_COMMAND,
         "-ss", "{}".format( start_time ),
-        "-noaccurate_seek",
+        # "-noaccurate_seek",
         "-i", "{}".format( input ),
         "-to", "{}".format( end_time ),
         "-c", "copy", "-copyts",

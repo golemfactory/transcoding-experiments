@@ -77,7 +77,10 @@ def split_video_by_keyframes( input_file, output_dir, num_splits, video_len ):
         end_time = take_closest( keyframes, end_time )
 
         # end_time from this iteration will be start_time from next iteration.
-        prev_end_time = end_time
+        # Move timestamp one frame forward. Otherwise ffmpeg will include video
+        # from last keyframe.
+        # TODO: Find way to compute magic number 0.1 depending on video frame rate.
+        prev_end_time = end_time + 0.1
 
         file_name = create_splitted_filename( input_file, start_time, end_time )
         output_file = os.path.join( output_dir, file_name )
