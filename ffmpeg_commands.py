@@ -33,7 +33,7 @@ def extract_video_part_command( input, output, start_time, end_time ):
         # "-noaccurate_seek",
         "-i", "{}".format( input ),
         "-to", "{}".format( end_time ),
-        "-c", "copy", "-copyts",
+        "-c", "copy",# "-copyts",
         "-avoid_negative_ts", "1",
         output
     ]
@@ -127,7 +127,7 @@ def list_keyframes( input, tmp_dir ):
         keyframes = [ float( line ) for line in lines ]
 
     # remove temporary file with keyframes list
-    os.remove( keyframes_list_file )
+    #os.remove( keyframes_list_file )
 
     keyframes.sort()
     return keyframes
