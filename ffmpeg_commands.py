@@ -2,6 +2,7 @@ import os
 import subprocess
 import datetime
 
+from params import params  # will be auto generated
 
 FFMPEG_COMMAND = "ffmpeg"
 FFPROBE_COMMAND = "ffprobe"
@@ -155,3 +156,37 @@ def list_keyframes( input, tmp_dir ):
 
     keyframes.sort()
     return keyframes
+
+
+######################################
+##
+def prepare_transcode_command(params):
+    video_quality = params['frame_rate'] if params['use_frame_rate'] else params['video']['bitrate']
+    video_flag = "-r" if params['use_frame_rate'] else "-b:v"
+    cmd = [FFMPEG_COMMAND,
+           # process an input file
+           "-i",
+           # input file
+           "{}".format(params['input']),
+           # "-nostdin",
+           # video settings
+           "-c:v", params['video']['codec'],
+           # video_flag, video_quality,
+           # audio settings
+           "-c:a", params['audio']['codec'],
+           # "-b:a", params['audio']['bitrate'],
+           # output
+           # "-vf", "scale={}:{}".format(params['resolution'][0], params['resolution'][1]),
+           # "-sws_flags", "{}".format(params["scaling_alg"]),
+           "{}".format(params['output'])
+           ]
+    return cmd
+
+
+######################################
+##
+def transcode_video(res_file, output):
+    params['input'] = res_file
+    params['output'] = output
+    cmd = prepare_transcode_command(params)
+    return exec_cmd(cmd)
