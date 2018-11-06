@@ -49,6 +49,7 @@ def split_video_command( input, output, output_list_file, segment_time ):
         "-f", "segment",
         "-segment_time", "{}".format( segment_time ),
         "-segment_list", output_list_file,
+        "-c", "copy",
         output
     ]
 
