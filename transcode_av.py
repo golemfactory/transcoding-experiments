@@ -2,7 +2,7 @@ import os
 import sys
 
 import ffmpeg_commands as ffmpeg
-from split_av import split_video_by_keyframes
+from split_av import split_video_by_keyframes, split_video_ffmpeg_function
 
 WORK_DIR = "work"
 RESOURCE_DIR = "resources"
@@ -42,7 +42,7 @@ def run():
     _, ext = output_file.split(".")
     prepare_dirs(output_dir, res_dir, work_dir)
 
-    resources, split_points = split_video_by_keyframes(file_name, res_dir, num_splits, video_len)
+    resources = split_video_ffmpeg_function(file_name, res_dir,  video_len / num_splits)
     results = transcode(resources, work_dir, ext)
     ffmpeg.merge_videos(results, output_file)
 

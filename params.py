@@ -6,8 +6,8 @@ params = {
     # "input": '/home/danielb/Videos/sample.mp4',
     "video": {
         # copy video codec cannot be used with scaling
-        "codec": 'libx264',
-        "bitrate": '32k'
+        "codec": 'copy',
+        "bitrate": '4096k'
     },
     "audio": {
         "codec": 'copy',

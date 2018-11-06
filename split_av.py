@@ -103,10 +103,17 @@ def split_video_ffmpeg_function( input_file, output_dir, split_len ):
 
     [ _, filename ] = os.path.split( input_file )
     [basename, extension] = os.path.splitext( filename )
-    output_name = os.path.join( output_dir, basename + ".m3u8" )
     
-    split_list_file = ffmpeg.split_video( input_file, output_name, split_len )
-    return split_list_file
+    output_name = os.path.join( output_dir, basename + "%03d" + extension )
+    output_list_file = os.path.join( output_dir, basename + extension + ".mergelist" )
+    
+    split_list_file = ffmpeg.split_video( input_file, output_name, output_list_file, split_len )
+
+    results = []
+    with open( split_list_file ) as f:
+        results = f.read().splitlines()
+
+    return [ os.path.join( output_dir, filename ) for filename in results ]
 
 
 
