@@ -2,15 +2,12 @@
 
 # Based on https://ffmpeg.org/ffmpeg.html#Stream-selection
 
-# skipped:
-# - Stream selection
-# -
 params = {
-    "input": '/home/danielb/Videos/sample.mp4',
+    # "input": '/home/danielb/Videos/sample.mp4',
     "video": {
         # copy video codec cannot be used with scaling
         "codec": 'libx264',
-        "bitrate": '1024k'
+        "bitrate": '32k'
     },
     "audio": {
         "codec": 'copy',
@@ -31,10 +28,9 @@ params = {
 
     # Some codecs require the size of width and height to be a multiple of n.
     # You can achieve this by setting the width or height to -n:
-    "resolution": ['300', '-2'],
+    "resolution": ['800', '-2'],
 
     # https://ffmpeg.org/ffmpeg-scaler.html
     "scaling_alg": 'bicubic',
-    "out_dir": '/home/danielb/Golem',
-    "output": 'test.mp4'
+    # "output": '/home/danielb/Golem/test.mp4'
 }

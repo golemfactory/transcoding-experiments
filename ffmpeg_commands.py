@@ -26,36 +26,35 @@ def to_timestamp(seconds):
 
 ######################################
 ##
-def extract_video_part_command( input, output, start_time, end_time ):
-
-    cmd = [ FFMPEG_COMMAND,
-        "-ss", "{}".format( start_time ),
-        # "-noaccurate_seek",
-        "-i", "{}".format( input ),
-        "-t", "{}".format( end_time - start_time ),
-        "-c", "copy",# "-copyts",
-        "-avoid_negative_ts", "1",
-        output
-    ]
+def extract_video_part_command(input, output, start_time, end_time):
+    cmd = [FFMPEG_COMMAND,
+           "-ss", "{}".format(start_time),
+           # "-noaccurate_seek",
+           "-i", "{}".format(input),
+           "-t", "{}".format(end_time - start_time),
+           "-c", "copy",  # "-copyts",
+           "-avoid_negative_ts", "1",
+           output
+           ]
 
     return cmd
 
 
 ######################################
 ##
-def split_video_command( input, output, segment_time ):
-
+def split_video_command(input, output, segment_time):
     output_list_file = output
 
-    cmd = [ FFMPEG_COMMAND,
-        "-i", input,
-        "-c:v", "h264",
-        "-flags", "+cgop", "-g", "30",
-        "-hls_time", "{}".format( segment_time ),
-        output_list_file
-    ]
+    cmd = [FFMPEG_COMMAND,
+           "-i", input,
+           "-c:v", "h264",
+           "-flags", "+cgop", "-g", "30",
+           "-hls_time", "{}".format(segment_time),
+           output_list_file
+           ]
 
     return cmd, output_list_file
+
 
 ######################################
 ##
@@ -114,12 +113,12 @@ def extract_video_part(input, output, start_time, end_time):
 
 ######################################
 ##
-def split_video( input, output, segment_time ):
-
-    cmd, file_list = split_video_command( input, output, segment_time )
-    exec_cmd( cmd )
+def split_video(input, output, segment_time):
+    cmd, file_list = split_video_command(input, output, segment_time)
+    exec_cmd(cmd)
 
     return file_list
+
 
 ######################################
 ##
@@ -150,7 +149,7 @@ def list_keyframes(input, tmp_dir):
         keyframes = [float(line) for line in lines]
 
     # remove temporary file with keyframes list
-    #os.remove( keyframes_list_file )
+    # os.remove( keyframes_list_file )
 
     keyframes.sort()
     return keyframes
@@ -166,7 +165,7 @@ def prepare_transcode_command(params):
            "-i",
            # input file
            "{}".format(params['input']),
-           "-nostdin",
+           # "-nostdin",
            # video settings
            "-c:v", params['video']['codec'],
            video_flag, video_quality,
@@ -174,15 +173,17 @@ def prepare_transcode_command(params):
            "-c:a", params['audio']['codec'],
            "-b:a", params['audio']['bitrate'],
            # output
-           "-vf",  "scale={}:{}".format(params['resolution'][0], params['resolution'][1]),
+           "-vf", "scale={}:{}".format(params['resolution'][0], params['resolution'][1]),
            "-sws_flags", "{}".format(params["scaling_alg"]),
-           "{}".format(os.path.join(params['out_dir'], params['output']))
+           "{}".format(params['output'])
            ]
     return cmd
 
 
 ######################################
 ##
-def transcode_video():
+def transcode_video(res_file, output):
+    params['input'] = res_file
+    params['output'] = output
     cmd = prepare_transcode_command(params)
     return exec_cmd(cmd)
