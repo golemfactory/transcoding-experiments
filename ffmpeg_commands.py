@@ -26,19 +26,36 @@ def to_timestamp(seconds):
 
 ######################################
 ##
-def extract_video_part_command(input, output, start_time, end_time):
-    cmd = [FFMPEG_COMMAND,
-           "-ss", "{}".format(start_time),
-           "-noaccurate_seek",
-           "-i", "{}".format(input),
-           "-to", "{}".format(end_time),
-           "-c", "copy", "-copyts",
-           "-avoid_negative_ts", "1",
-           output
-           ]
+def extract_video_part_command( input, output, start_time, end_time ):
+
+    cmd = [ FFMPEG_COMMAND,
+        "-ss", "{}".format( start_time ),
+        # "-noaccurate_seek",
+        "-i", "{}".format( input ),
+        "-t", "{}".format( end_time - start_time ),
+        "-c", "copy",# "-copyts",
+        "-avoid_negative_ts", "1",
+        output
+    ]
 
     return cmd
 
+
+######################################
+##
+def split_video_command( input, output, segment_time ):
+
+    output_list_file = output
+
+    cmd = [ FFMPEG_COMMAND,
+        "-i", input,
+        "-c:v", "h264",
+        "-flags", "+cgop", "-g", "30",
+        "-hls_time", "{}".format( segment_time ),
+        output_list_file
+    ]
+
+    return cmd, output_list_file
 
 ######################################
 ##
@@ -97,6 +114,15 @@ def extract_video_part(input, output, start_time, end_time):
 
 ######################################
 ##
+def split_video( input, output, segment_time ):
+
+    cmd, file_list = split_video_command( input, output, segment_time )
+    exec_cmd( cmd )
+
+    return file_list
+
+######################################
+##
 def merge_videos(input_files, output):
     cmd, list_file = merge_videos_command(input_files, output)
     exec_cmd(cmd)
@@ -124,7 +150,7 @@ def list_keyframes(input, tmp_dir):
         keyframes = [float(line) for line in lines]
 
     # remove temporary file with keyframes list
-    os.remove(keyframes_list_file)
+    #os.remove( keyframes_list_file )
 
     keyframes.sort()
     return keyframes
