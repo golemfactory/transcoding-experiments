@@ -150,7 +150,7 @@ def list_keyframes( input, tmp_dir ):
         keyframes = [ float( line ) for line in lines ]
 
     # remove temporary file with keyframes list
-    #os.remove( keyframes_list_file )
+    os.remove( keyframes_list_file )
 
     keyframes.sort()
     return keyframes
