@@ -42,15 +42,12 @@ def extract_video_part_command( input, output, start_time, end_time ):
 
 ######################################
 ##
-def split_video_command( input, output, segment_time ):
-
-    output_list_file = output + ".mergelist"
+def split_video_command( input, output, output_list_file, segment_time ):
 
     cmd = [ FFMPEG_COMMAND,
         "-i", input,
         "-f", "segment",
         "-segment_time", "{}".format( segment_time ),
-        "-segment_format_options", "movflags=+faststart",
         "-segment_list", output_list_file,
         output
     ]
@@ -115,9 +112,9 @@ def extract_video_part( input, output, start_time, end_time ):
 
 ######################################
 ##
-def split_video( input, output, segment_time ):
+def split_video( input, output, output_list_file, segment_time ):
 
-    cmd, file_list = split_video_command( input, output, segment_time )
+    cmd, file_list = split_video_command( input, output, output_list_file, segment_time )
     exec_cmd( cmd )
 
     return file_list
