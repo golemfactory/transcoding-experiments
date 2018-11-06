@@ -44,14 +44,15 @@ def extract_video_part_command( input, output, start_time, end_time ):
 ##
 def split_video_command( input, output, segment_time ):
 
-    output_list_file = output
+    output_list_file = output + ".mergelist"
 
     cmd = [ FFMPEG_COMMAND,
         "-i", input,
-        "-c:v", "h264",
-        "-flags", "+cgop", "-g", "30",
-        "-hls_time", "{}".format( segment_time ),
-        output_list_file
+        "-f", "segment",
+        "-segment_time", "{}".format( segment_time ),
+        "-segment_format_options", "movflags=+faststart",
+        "-segment_list", output_list_file,
+        output
     ]
 
     return cmd, output_list_file

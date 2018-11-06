@@ -103,7 +103,7 @@ def split_video_ffmpeg_function( input_file, output_dir, split_len ):
 
     [ _, filename ] = os.path.split( input_file )
     [basename, extension] = os.path.splitext( filename )
-    output_name = os.path.join( output_dir, basename + ".m3u8" )
+    output_name = os.path.join( output_dir, basename + "%03d" + extension )
     
     split_list_file = ffmpeg.split_video( input_file, output_name, split_len )
     return split_list_file
