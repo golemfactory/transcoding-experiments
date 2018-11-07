@@ -171,13 +171,13 @@ def prepare_transcode_command(params):
            # "-nostdin",
            # video settings
            "-c:v", params['video']['codec'],
-           # video_flag, video_quality,
+           video_flag, video_quality,
            # audio settings
            "-c:a", params['audio']['codec'],
-           # "-b:a", params['audio']['bitrate'],
+           "-b:a", params['audio']['bitrate'],
            # output
-           # "-vf", "scale={}:{}".format(params['resolution'][0], params['resolution'][1]),
-           # "-sws_flags", "{}".format(params["scaling_alg"]),
+           "-vf", "scale={}:{}".format(params['resolution'][0], params['resolution'][1]),
+           "-sws_flags", "{}".format(params["scaling_alg"]),
            "{}".format(params['output'])
            ]
     return cmd

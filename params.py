@@ -6,8 +6,8 @@ params = {
     # "input": '/home/danielb/Videos/sample.mp4',
     "video": {
         # copy video codec cannot be used with scaling
-        "codec": 'copy',
-        "bitrate": '4096k'
+        "codec": 'libx264',
+        "bitrate": '64k'
     },
     "audio": {
         "codec": 'copy',
@@ -28,7 +28,7 @@ params = {
 
     # Some codecs require the size of width and height to be a multiple of n.
     # You can achieve this by setting the width or height to -n:
-    "resolution": ['800', '-2'],
+    "resolution": ['400', '-2'],
 
     # https://ffmpeg.org/ffmpeg-scaler.html
     "scaling_alg": 'bicubic',
