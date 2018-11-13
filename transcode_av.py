@@ -18,16 +18,11 @@ def prepare_dirs(dir, res_dir, work_dir):
         os.mkdir(work_dir)
 
 
-def transcode(resources, work_dir, ext):
-    results = []
-    for res_file in resources:
-        pos_res = res_file.rfind(RESOURCE_DIR + "/") + len(RESOURCE_DIR) + 1
-        pos_dot = res_file.rfind(".") + 1
-        output = os.path.join(work_dir, "out_" + res_file[pos_res:pos_dot] + ext)
-        ffmpeg.transcode_video(res_file, output)
-        results.append(output)
+def transcode(resources, work_dir):
+    output = os.path.join(work_dir, "output.m3u8")
+    ffmpeg.transcode_video(resources, output)
 
-    return results
+    return output
 
 
 def run():
@@ -39,12 +34,11 @@ def run():
     output_dir = os.path.dirname(output_file)
     res_dir = os.path.join(output_dir, RESOURCE_DIR)
     work_dir = os.path.join(output_dir, WORK_DIR)
-    _, ext = output_file.split(".")
     prepare_dirs(output_dir, res_dir, work_dir)
 
-    resources = split_video_ffmpeg_function(file_name, res_dir,  video_len / num_splits)
-    results = transcode(resources, work_dir, ext)
-    ffmpeg.merge_videos(results, output_file)
+    split_file = split_video_ffmpeg_function(file_name, res_dir,  video_len / num_splits)
+    transcode_file = transcode(split_file, work_dir)
+    ffmpeg.merge_videos(transcode_file, output_file)
 
 
 if __name__ == "__main__":

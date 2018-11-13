@@ -43,15 +43,14 @@ def extract_video_part_command( input, output, start_time, end_time ):
 
 ######################################
 ##
-def split_video_command( input, output, output_list_file, segment_time ):
+def split_video_command( input, output_list_file, segment_time ):
 
     cmd = [ FFMPEG_COMMAND,
         "-i", input,
-        "-f", "segment",
-        "-segment_time", "{}".format( segment_time ),
-        "-segment_list", output_list_file,
+        "-hls_time", "{}".format( segment_time ),
+        "-hls_list_size", "0",
         "-c", "copy",
-        output
+        output_list_file
     ]
 
     return cmd, output_list_file
@@ -77,18 +76,14 @@ def generate_merge_list( input_files, output ):
 
 ######################################
 ##
-def merge_videos_command( input_files, output ):
-
-    list_file = generate_merge_list( input_files, output )
+def merge_videos_command( input_file, output ):
 
     cmd = [ FFMPEG_COMMAND,
-        "-f", "concat",
-        "-safe", "0",
-        "-i", list_file,
+        "-i", input_file,
         "-c", "copy", output
     ]
 
-    return cmd, list_file
+    return cmd, input_file
 
 ######################################
 ##
@@ -114,9 +109,9 @@ def extract_video_part( input, output, start_time, end_time ):
 
 ######################################
 ##
-def split_video( input, output, output_list_file, segment_time ):
+def split_video( input, output_list_file, segment_time ):
 
-    cmd, file_list = split_video_command( input, output, output_list_file, segment_time )
+    cmd, file_list = split_video_command( input, output_list_file, segment_time )
     exec_cmd( cmd )
 
     return file_list
@@ -161,25 +156,64 @@ def list_keyframes( input, tmp_dir ):
 ######################################
 ##
 def prepare_transcode_command(params):
-    video_quality = params['frame_rate'] if params['use_frame_rate'] else params['video']['bitrate']
-    video_flag = "-r" if params['use_frame_rate'] else "-b:v"
     cmd = [FFMPEG_COMMAND,
            # process an input file
            "-i",
            # input file
            "{}".format(params['input']),
+           # It states that all entries from list should be processed, default is 5
+           "-hls_list_size", "0",
            # "-nostdin",
-           # video settings
-           "-c:v", params['video']['codec'],
-           video_flag, video_quality,
-           # audio settings
-           "-c:a", params['audio']['codec'],
-           "-b:a", params['audio']['bitrate'],
-           # output
-           "-vf", "scale={}:{}".format(params['resolution'][0], params['resolution'][1]),
-           "-sws_flags", "{}".format(params["scaling_alg"]),
-           "{}".format(params['output'])
+           # "-reset_timestamps", "1",
            ]
+
+    # video settings
+    try:
+        codec = params['video']['codec']
+        cmd.append("-c:v")
+        cmd.append(codec)
+    except:
+        pass
+    try:
+        fps = params['frame_rate']
+        cmd.append("-r")
+        cmd.append(fps)
+    except:
+        pass
+    try:
+        vbitrate = params['video']['bitrate']
+        cmd.append("-b:v")
+        cmd.append(vbitrate)
+    except:
+        pass
+    # audio settings
+    try:
+        acodec = params['audio']['codec']
+        cmd.append("-c:a")
+        cmd.append(acodec)
+    except:
+        pass
+    try:
+        abitrate = params['audio']['bitrate']
+        cmd.append("-c:a")
+        cmd.append(abitrate)
+    except:
+        pass
+    try:
+        res = params['resolution']
+        cmd.append("-vf")
+        cmd.append("scale={}:{}".format(res[0], res[1]))
+    except:
+        pass
+    try:
+        scale = params["scaling_alg"]
+        cmd.append("-sws_flags")
+        cmd.append("{}".format(scale))
+    except:
+        pass
+
+    cmd.append("{}".format(params['output']))
+
     return cmd
 
 

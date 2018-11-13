@@ -1,0 +1,13 @@
+Running ffmpeg docker outside golem
+1. Add streams to working-dir/mount/resources/
+2. Edit working-dir/mount/work/params.py and set parameters
+3. Copy docker_ffmpegtask.py to working-dir/mount/work/
+4. Run docker    
+    docker run -it --rm --mount type=bind,source="$(pwd)"/working-dir/mount/work/,target=/golem/work/ --mount type=bind,source="$(pwd)"/working-dir/mount/output/,target=/golem/output/ --mount type=bind,source="$(pwd)"/working-dir/mount/resources/,target=/golem/resources/ golemfactory/ffmpeg:0.1 docker_ffmpegtask.py
+
+
+Building docker with ffmpeg:
+1. Build golem base image
+    docker build -f base.Dockerfile -t golemfactory/base:1.4 .
+2. Build regular ffmpeg image:
+    docker build -f ffmpeg.Dockerfile -t golemfactory/ffmpeg:0.1 .
