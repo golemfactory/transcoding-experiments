@@ -50,6 +50,7 @@ def split_video_command( input, output_list_file, segment_time ):
         "-hls_time", "{}".format( segment_time ),
         "-hls_list_size", "0",
         "-c", "copy",
+        "-copyts",
         output_list_file
     ]
 
@@ -80,6 +81,7 @@ def merge_videos_command( input_file, output ):
 
     cmd = [ FFMPEG_COMMAND,
         "-i", input_file,
+        "-copyts",
         "-c", "copy", output
     ]
 
@@ -163,6 +165,7 @@ def prepare_transcode_command(params):
            "{}".format(params['input']),
            # It states that all entries from list should be processed, default is 5
            "-hls_list_size", "0",
+           "-copyts"
            # "-nostdin",
            # "-reset_timestamps", "1",
            ]

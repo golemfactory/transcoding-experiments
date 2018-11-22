@@ -1,8 +1,10 @@
 import os
 import sys
+import m3u8
 
 import ffmpeg_commands as ffmpeg
 from split_av import split_video_by_keyframes, split_video_ffmpeg_function
+from m3u8_utils import create_m3u8, join_playlists
 
 WORK_DIR = "work"
 RESOURCE_DIR = "resources"
@@ -18,8 +20,8 @@ def prepare_dirs(dir, res_dir, work_dir):
         os.mkdir(work_dir)
 
 
-def transcode(resources, work_dir):
-    output = os.path.join(work_dir, "output.m3u8")
+def transcode(resources, work_dir, counter):
+    output = os.path.join(work_dir, "output{}.m3u8".format(counter))
     ffmpeg.transcode_video(resources, output)
 
     return output
@@ -37,8 +39,24 @@ def run():
     prepare_dirs(output_dir, res_dir, work_dir)
 
     split_file = split_video_ffmpeg_function(file_name, res_dir,  video_len / num_splits)
-    transcode_file = transcode(split_file, work_dir)
-    ffmpeg.merge_videos(transcode_file, output_file)
+    m3u8_main_list = m3u8.load(split_file)
+    counter = 0
+    playlists = []
+    transcode_playlist = []
+    for segment in m3u8_main_list.segments:
+        playlists.append( create_m3u8(res_dir, segment, counter) )
+        counter += 1
+    counter = 0
+    for playlist in playlists:
+       transcode_playlist.append(transcode(playlist, work_dir, counter))
+       counter += 1
+    merged = join_playlists(transcode_playlist)
+    merged_filename = work_dir+"/merged_playlist.m3u8"
+    file = open(merged_filename,'w')
+    file.write(merged.dumps())
+    file.close()
+    
+    ffmpeg.merge_videos(merged_filename, output_file)
 
 
 if __name__ == "__main__":
