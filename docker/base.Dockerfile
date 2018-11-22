@@ -32,6 +32,8 @@ RUN mkdir /golem \
  && mkdir /golem/resources \
  && mkdir /golem/output
 
+ENV PYTHONPATH=/golem:$PYTHONPATH
+
 COPY base-scripts/install_py_libs.sh /golem/install_py_libs.sh
 RUN chmod +x /golem/install_py_libs.sh
 
