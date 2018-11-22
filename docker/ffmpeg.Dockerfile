@@ -214,4 +214,6 @@ RUN set -x \
 	&& rm -rf /usr/local/vmaf-1.3.9 \
 	&& rm -rf /usr/local/ffmpeg-4.1
 
+RUN /golem/install_py_libs.sh m3u8
+
 WORKDIR /golem/work/

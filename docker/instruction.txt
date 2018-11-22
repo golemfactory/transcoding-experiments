@@ -1,13 +1,13 @@
-Running ffmpeg docker outside golem
-1. Add streams to working-dir/mount/resources/
-2. Edit working-dir/mount/work/params.py and set parameters
-3. Copy docker_ffmpegtask.py to working-dir/mount/work/
-4. Run docker    
-    docker run -it --rm --mount type=bind,source="$(pwd)"/working-dir/mount/work/,target=/golem/work/ --mount type=bind,source="$(pwd)"/working-dir/mount/output/,target=/golem/output/ --mount type=bind,source="$(pwd)"/working-dir/mount/resources/,target=/golem/resources/ golemfactory/ffmpeg:0.1 docker_ffmpegtask.py
-
-
 Building docker with ffmpeg:
 1. Build golem base image
     docker build -f base.Dockerfile -t golemfactory/base:1.4 .
 2. Build regular ffmpeg image:
     docker build -f ffmpeg.Dockerfile -t golemfactory/ffmpeg:0.1 .
+
+Running ffmpeg docker outside golem
+1. Create "working-dir" same as working-dir-example
+2. Add streams to working-dir/mount/resources/
+3. Run docker(runs shell in /golem/work):    
+    docker run -it --rm --entrypoint sh --mount type=bind,source="$(pwd)"/working-dir/mount/work/,target=/golem/work/ --mount type=bind,source="$(pwd)"/working-dir/mount/output/,target=/golem/output/ --mount type=bind,source="$(pwd)"/working-dir/mount/resources/,target=/golem/resources/ golemfactory/ffmpeg:0.1
+4. Run transcoding pipeline(must pass params):
+    - python3.6 /golem/scripts/transcode_av.py /golem/resources/Beach.mp4 /golem/output/output.mp4 10 100
