@@ -222,8 +222,6 @@ def prepare_transcode_command(params):
 
 ######################################
 ##
-def transcode_video(res_file, output):
-    params['input'] = res_file
-    params['output'] = output
+def transcode_video(params):
     cmd = prepare_transcode_command(params)
     return exec_cmd(cmd)
