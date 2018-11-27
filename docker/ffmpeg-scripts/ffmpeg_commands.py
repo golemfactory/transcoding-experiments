@@ -2,8 +2,6 @@ import os
 import subprocess
 import datetime
 
-from params import params  # will be auto generated
-
 FFMPEG_COMMAND = "ffmpeg"
 FFPROBE_COMMAND = "ffprobe"
 
@@ -157,12 +155,12 @@ def list_keyframes( input, tmp_dir ):
 
 ######################################
 ##
-def prepare_transcode_command(params):
+def prepare_transcode_command(track, output_playlist_name, targs):
     cmd = [FFMPEG_COMMAND,
            # process an input file
            "-i",
            # input file
-           "{}".format(params['input']),
+           "{}".format(track),
            # It states that all entries from list should be processed, default is 5
            "-hls_list_size", "0",
            "-copyts"
@@ -172,56 +170,56 @@ def prepare_transcode_command(params):
 
     # video settings
     try:
-        codec = params['video']['codec']
+        codec = targs['video']['codec']
         cmd.append("-c:v")
         cmd.append(codec)
     except:
         pass
     try:
-        fps = params['frame_rate']
+        fps = targs['frame_rate']
         cmd.append("-r")
         cmd.append(fps)
     except:
         pass
     try:
-        vbitrate = params['video']['bitrate']
+        vbitrate = targs['video']['bitrate']
         cmd.append("-b:v")
         cmd.append(vbitrate)
     except:
         pass
     # audio settings
     try:
-        acodec = params['audio']['codec']
+        acodec = targs['audio']['codec']
         cmd.append("-c:a")
         cmd.append(acodec)
     except:
         pass
     try:
-        abitrate = params['audio']['bitrate']
+        abitrate = targs['audio']['bitrate']
         cmd.append("-c:a")
         cmd.append(abitrate)
     except:
         pass
     try:
-        res = params['resolution']
+        res = targs['resolution']
         cmd.append("-vf")
         cmd.append("scale={}:{}".format(res[0], res[1]))
     except:
         pass
     try:
-        scale = params["scaling_alg"]
+        scale = targs["scaling_alg"]
         cmd.append("-sws_flags")
         cmd.append("{}".format(scale))
     except:
         pass
 
-    cmd.append("{}".format(params['output']))
+    cmd.append("{}".format(output_playlist_name))
 
     return cmd
 
 
 ######################################
 ##
-def transcode_video(params):
-    cmd = prepare_transcode_command(params)
+def transcode_video(track, output_playlist_name, targs):
+    cmd = prepare_transcode_command(track, output_playlist_name, targs)
     return exec_cmd(cmd)

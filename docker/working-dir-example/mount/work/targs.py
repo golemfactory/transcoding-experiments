@@ -1,9 +1,4 @@
-# file should be generated automatically
-
-# Based on https://ffmpeg.org/ffmpeg.html#Stream-selection
-
-params = {
-    # "input": '/home/danielb/Videos/sample.mp4',
+targs = {
     "video": {
         # copy video codec cannot be used with scaling
         "codec": 'libx264',
@@ -32,5 +27,4 @@ params = {
 
     # https://ffmpeg.org/ffmpeg-scaler.html
     "scaling_alg": 'bicubic',
-    # "output": '/home/danielb/Golem/test.mp4'
 }

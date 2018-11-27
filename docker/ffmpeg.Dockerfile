@@ -4,8 +4,6 @@ FROM golemfactory/base:1.4
 
 MAINTAINER Artur Zawłocki <artur.zawlocki@imapp.pl>
 
-COPY ffmpeg-scripts/ /golem/scripts/
-	
 # Build ffmpeg
 RUN set -x \
 	# get dependencies 
@@ -215,5 +213,9 @@ RUN set -x \
 	&& rm -rf /usr/local/ffmpeg-4.1
 
 RUN /golem/install_py_libs.sh m3u8
+
+COPY ffmpeg-scripts/ /golem/scripts/
+
+ENV PYTHONPATH /golem/scripts/
 
 WORKDIR /golem/work/
