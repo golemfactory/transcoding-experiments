@@ -11,7 +11,8 @@ RUN set -x \
     && apt-get install -y python3.6 \
     && apt-get clean \
     && apt-get -y autoremove \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -s /usr/bin/python3.6 /usr/bin/python3
 
 RUN wget -O /tmp/su-exec "https://github.com/golemfactory/golem/wiki/binaries/su-exec" \
     && test "60e8c3010aaa85f5d919448d082ecdf6e8b75a1c  /tmp/su-exec" = "$(sha1sum /tmp/su-exec)" \
@@ -32,7 +33,7 @@ RUN mkdir /golem \
  && mkdir /golem/resources \
  && mkdir /golem/output
 
-ENV PYTHONPATH=/golem:$PYTHONPATH
+ENV PYTHONPATH=/golem/scripts:/golem
 
 COPY base-scripts/install_py_libs.sh /golem/install_py_libs.sh
 RUN chmod +x /golem/install_py_libs.sh
