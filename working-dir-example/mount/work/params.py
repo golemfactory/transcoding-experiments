@@ -1,4 +1,6 @@
 import targs
+
+context = 1
 path_to_stream = "/golem/resources/Beach.mp4"
 video_length = 100
 parts = 10

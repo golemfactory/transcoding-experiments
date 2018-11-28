@@ -3,7 +3,7 @@ import m3u8
 
 def create_and_dump_m3u8(path, segment):
     [basename, _] = os.path.splitext(segment.uri)
-    filename = basename + ".m3u8"
+    filename = os.path.join(path, basename + ".m3u8")
     file = open(filename, 'w')
     file.write("#EXTM3U\n")
     file.write("#EXT-X-VERSION:3\n")
