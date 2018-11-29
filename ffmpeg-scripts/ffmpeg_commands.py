@@ -22,7 +22,7 @@ def split_video( input_file, output_dir, split_len ):
     [ _, filename ] = os.path.split( input_file )
     [basename, _] = os.path.splitext( filename )
     
-    output_list_file = os.path.join( output_dir, basename + ".m3u8" )
+    output_list_file = os.path.join( output_dir, basename + "_.m3u8" )
     
     split_list_file = split( input_file, output_list_file, split_len )
 

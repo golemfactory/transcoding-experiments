@@ -16,10 +16,10 @@ def split_stream(path_to_stream, video_length, parts):
 def transcode_segment(playlist, targs):
        transcode_video(playlist, targs, OUTPUT_DIR)
 
-def merge_stream(playlists, outputfilename):
-    output_playlist = os.path.splitext(outputfilename)
-    merged = join_playlists(playlists)
-    merged_filename = WORK_DIR + output_playlist +".m3u8"
+def merge_stream(playlists_dir, outputfilename):
+    [output_playlist, _] = os.path.splitext(outputfilename)
+    merged = join_playlists(playlists_dir)
+    merged_filename = output_playlist +".m3u8"
     file = open(merged_filename,'w')
     file.write(merged.dumps())
     file.close()
@@ -32,7 +32,7 @@ def run():
     elif params.context == 2:
         transcode_segment(params.playlist, params.targs)
     elif params.context == 3:
-        pass
+        merge_stream(params.playlists_dir, params.output_stream)
 
 if __name__ == "__main__":
     run()
