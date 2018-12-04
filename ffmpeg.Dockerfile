@@ -1,6 +1,6 @@
 # Dockerfile for tasks requiring ffmpeg.
 
-FROM golemfactory/base:1.4
+FROM golemfactory/base:1.3
 
 MAINTAINER Artur Zawłocki <artur.zawlocki@imapp.pl>
 
@@ -216,6 +216,6 @@ RUN /golem/install_py_libs.sh m3u8
 
 COPY ffmpeg-scripts/ /golem/scripts/
 
-ENV PYTHONPATH /golem/scripts/
+ENV PYTHONPATH=/golem/scripts:/golem:$PYTHONPATH
 
 WORKDIR /golem/work/
