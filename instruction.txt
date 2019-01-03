@@ -1,8 +1,10 @@
 Building docker with ffmpeg:
-1. Build golem base image
-    docker build -f base.Dockerfile -t golemfactory/base:1.4 .
-2. Build regular ffmpeg image:
-    docker build -f ffmpeg.Dockerfile -t golemfactory/ffmpeg:0.1 .
+Previously ffmpeg was built from source, now is installed inside docker with `apt-get`
+
+Both images bases on golemfactory/base:1.3, currently used is ffmpeg:0.2
+1. Build regular ffmpeg image:
+    docker build -f ffmpeg_source.Dockerfile -t golemfactory/ffmpeg:0.1 .
+    docker build -f ffmpeg.Dockerfile -t golemfactory/ffmpeg:0.2 .
 
 Running ffmpeg docker outside golem
 1. Create "working-dir" same as working-dir-example
