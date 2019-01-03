@@ -1,14 +1,16 @@
 {
-    "context": "3",
-    "path_to_stream": "/golem/resources/Beach.mp4",
+    "context": "4",
+    "path_to_stream": "/golem/resources/Jellyfish.mp4",
     "video_length": 100, 
-    "parts": 25, 
-    "playlist": "/golem/resources/Beach[num=19].m3u8", 
+    "parts": 10, 
+    "track": "/golem/resources/Jellyfish[num=19].m3u8",
+    "use_playlist": 1,
     "targs": 
     {
         "video": 
         {
-            "codec": "libx264", "bitrate": "2459k"
+            "codec": "libx264",
+            "bitrate": "2459k"
         },
         "audio": 
         {
@@ -18,6 +20,5 @@
         "resolution": ["400", "400"],
         "scaling_alg": "bicubic"
     },
-    "output_stream": "/golem/output/output.mp4",
-    "playlists_dir": "/golem/output"
+    "output_stream": "/golem/output/output.mp4"
 }

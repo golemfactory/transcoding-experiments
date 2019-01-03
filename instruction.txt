@@ -19,3 +19,12 @@ Running ffmpeg docker outside golem
 6. You can also run shell in docker:
     docker run -it --rm --entrypoint sh --mount type=bind,source="$(pwd)"/working-dir/mount/work/,target=/golem/work/ --mount type=bind,source="$(pwd)"/working-dir/mount/output/,target=/golem/output/ --mount type=bind,source="$(pwd)"/working-dir/mount/resources/,target=/golem/resources/ golemfactory/ffmpeg:0.2
 
+Pipeline and video comparison
+1. Add files to working-dir/mount/work:
+    - params_template.json //can do a refactor to remove usage of it
+2. Run:
+    - ./pipeline.sh
+3. TODOs:
+    - fix problem with splitting and merging(moves keyframes)
+    - prepare test data
+    - rewrite pipeline to python? do not know what is preferred
