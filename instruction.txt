@@ -1,7 +1,7 @@
 Building docker with ffmpeg:
 Previously ffmpeg was built from source, now is installed inside docker with `apt-get`
 
-Both images bases on golemfactory/base:1.3, currently used is ffmpeg:0.2
+Both images bases on golemfactory/base:1.3, currently used is golemfactory/ffmpeg:0.2
 1. Build regular ffmpeg image:
     docker build -f ffmpeg_source.Dockerfile -t golemfactory/ffmpeg:0.1 .
     docker build -f ffmpeg.Dockerfile -t golemfactory/ffmpeg:0.2 .
@@ -10,11 +10,12 @@ Running ffmpeg docker outside golem
 1. Create "working-dir" same as working-dir-example
 2. Add streams to working-dir/mount/resources/
 3. Add files to working-dir/mount/work: 
-    - params.py
-    - targs.py
+    - params.json
     - task.py
+4. Modify params.json
+5. Execute ffmpeg task:
+    - ./task.sh golemfactory/ffmpeg:0.2 or
+    - docker run -it --rm --mount type=bind,source="$(pwd)"/working-dir/mount/work/,target=/golem/work/ --mount type=bind,source="$(pwd)"/working-dir/mount/output/,target=/golem/output/ --mount type=bind,source="$(pwd)"/working-dir/mount/resources/,target=/golem/resources/ golemfactory/ffmpeg:0.2 task.py
+6. You can also run shell in docker:
+    docker run -it --rm --entrypoint sh --mount type=bind,source="$(pwd)"/working-dir/mount/work/,target=/golem/work/ --mount type=bind,source="$(pwd)"/working-dir/mount/output/,target=/golem/output/ --mount type=bind,source="$(pwd)"/working-dir/mount/resources/,target=/golem/resources/ golemfactory/ffmpeg:0.2
 
-3. Run docker(runs shell in /golem/work):    
-    docker run -it --rm --entrypoint sh --mount type=bind,source="$(pwd)"/working-dir/mount/work/,target=/golem/work/ --mount type=bind,source="$(pwd)"/working-dir/mount/output/,target=/golem/output/ --mount type=bind,source="$(pwd)"/working-dir/mount/resources/,target=/golem/resources/ golemfactory/ffmpeg:0.1
- or execute task.py: 
-    docker run -it --rm --mount type=bind,source="$(pwd)"/working-dir/mount/work/,target=/golem/work/ --mount type=bind,source="$(pwd)"/working-dir/mount/output/,target=/golem/output/ --mount type=bind,source="$(pwd)"/working-dir/mount/resources/,target=/golem/resources/ golemfactory/ffmpeg:0.1 task.py

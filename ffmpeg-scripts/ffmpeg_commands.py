@@ -1,87 +1,78 @@
 import os
 import subprocess
-import datetime
 
 FFMPEG_COMMAND = "ffmpeg"
 FFPROBE_COMMAND = "ffprobe"
 
-######################################
-##
-def exec_cmd(cmd, file=None):
 
-    print( "Executing command:" )
-    print( cmd )
+def exec_cmd(cmd, file=None):
+    print("Executing command:")
+    print(cmd)
 
     pc = subprocess.Popen(cmd, stdout=file)
     return pc.wait()
 
-######################################
-##
-def split_video( input_file, output_dir, split_len ):
 
-    [ _, filename ] = os.path.split( input_file )
-    [basename, _] = os.path.splitext( filename )
-    
-    output_list_file = os.path.join( output_dir, basename + "_.m3u8" )
-    
-    split_list_file = split( input_file, output_list_file, split_len )
+def split_video(input_file, output_dir, split_len):
+    [_, filename] = os.path.split(input_file)
+    [basename, _] = os.path.splitext(filename)
+
+    output_list_file = os.path.join(output_dir, basename + "_.m3u8")
+
+    split_list_file = split(input_file, output_list_file, split_len)
 
     return split_list_file
 
-######################################
-##
-def split( input, output_list_file, segment_time ):
 
-    cmd, file_list = split_video_command( input, output_list_file, segment_time )
-    exec_cmd( cmd )
+def split(input, output_list_file, segment_time):
+    cmd, file_list = split_video_command(input, output_list_file, segment_time)
+    exec_cmd(cmd)
 
     return file_list
 
-######################################
-##
-def split_video_command( input, output_list_file, segment_time ):
 
-    cmd = [ FFMPEG_COMMAND,
-        "-i", input,
-        "-hls_time", "{}".format( segment_time ),
-        "-hls_list_size", "0",
-        "-c", "copy",
-        "-copyts",
-        output_list_file
-    ]
+def split_video_command(input, output_list_file, segment_time):
+    cmd = [FFMPEG_COMMAND,
+           "-i", input,
+           "-hls_time", "{}".format(segment_time),
+           "-hls_list_size", "0",
+           "-c", "copy",
+           "-copyts",
+           "-mpegts_copyts", "1",
+           output_list_file
+           ]
 
     return cmd, output_list_file
 
-######################################
-##
-def transcode_video(track, targs, output_dir):
+
+def transcode_video(track, targs, output, use_playlist):
+    output_dir = os.path.dirname(output)
     [_, playlist] = os.path.split(track)
     [basename, _] = os.path.splitext(playlist)
-    output_playlist_name = os.path.join(output_dir, basename + "_TC.m3u8")
-    transcode(track, output_playlist_name, targs)
-
-    return output_playlist_name
-
-######################################
-##
-def transcode(track, output_playlist_name, targs):
-    cmd = transcode_video_command(track, output_playlist_name, targs)
+    if int(use_playlist) == 1:
+        ext = ".m3u8"
+    else:
+        _, ext = os.path.splitext(output)
+    output_playlist_name = os.path.join(output_dir, basename + "_TC{}".format(ext))
+    cmd = transcode_video_command(track, output_playlist_name, targs, use_playlist)
     return exec_cmd(cmd)
 
-######################################
-##
-def transcode_video_command(track, output_playlist_name, targs):
+
+def transcode_video_command(track, output_playlist_name, targs, use_playlist):
     cmd = [FFMPEG_COMMAND,
            # process an input file
            "-i",
            # input file
-           "{}".format(track),
-           # It states that all entries from list should be processed, default is 5
-           "-hls_list_size", "0",
-           "-copyts"
-           # "-nostdin",
-           # "-reset_timestamps", "1",
+           "{}".format(track)
            ]
+
+    if int(use_playlist) == 1:
+        playlist_cmd = [
+            # It states that all entries from list should be processed, default is 5
+            "-hls_list_size", "0",
+            "-copyts"
+        ]
+        cmd.extend(playlist_cmd)
 
     # video settings
     try:
@@ -132,24 +123,20 @@ def transcode_video_command(track, output_playlist_name, targs):
 
     return cmd
 
-######################################
-##
-def merge_videos( input_files, output ):
 
-    cmd, list_file = merge_videos_command( input_files, output )
-    exec_cmd( cmd )
+def merge_videos(input_files, output):
+    cmd, list_file = merge_videos_command(input_files, output)
+    exec_cmd(cmd)
 
     # remove temporary file with merge list
-    os.remove( list_file )
+    os.remove(list_file)
 
-######################################
-##
-def merge_videos_command( input_file, output ):
 
-    cmd = [ FFMPEG_COMMAND,
-        "-i", input_file,
-        "-copyts",
-        "-c", "copy", output
-    ]
+def merge_videos_command(input_file, output):
+    cmd = [FFMPEG_COMMAND,
+           "-i", input_file,
+           "-copyts",
+           "-c", "copy", output
+           ]
 
     return cmd, input_file
