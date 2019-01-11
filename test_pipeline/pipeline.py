@@ -1,6 +1,8 @@
 import os
 import glob
 import json
+import shutil
+
 import docker_utils as docker
 
 
@@ -24,6 +26,10 @@ def save_params(params, output):
 
     with open(output, 'w+') as f:
         json.dump(params, f)
+
+
+def clean_step(tests_dir):
+    shutil.rmtree(tests_dir)
 
 
 def split_video(task_def, tests_dir, image):
@@ -57,6 +63,7 @@ def split_video(task_def, tests_dir, image):
 
 def run_pipeline(task_def, tests_dir, image):
 
+    clean_step(tests_dir)
     split_video(task_def, os.path.join( tests_dir, "split" ), image )
 
 
