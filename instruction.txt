@@ -28,3 +28,4 @@ Pipeline and video comparison
     - fix problem with splitting and merging(moves keyframes)
     - prepare test data
     - rewrite pipeline to python? do not know what is preferred
+    - move task.py to docker image

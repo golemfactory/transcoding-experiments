@@ -1,5 +1,5 @@
 {
-    "context": "4",
+    "command": "invalid",
     "path_to_stream": "/golem/resources/Jellyfish.mp4",
     "video_length": 100, 
     "parts": 10, 

@@ -35,13 +35,15 @@ def do_merge(outputfilename):
 def run():
     with open(PARAMS_FILE, 'r') as f:
         params = json.load(f)
-        if int(params['context']) == 1:
+        if params['command'] == "split":
             do_split(params['path_to_stream'], params['video_length'], params['parts'])
-        elif int(params['context']) == 2:
+        elif params['command'] == "transcode":
             do_transcode(params['track'], params['targs'],
                          params['output_stream'], params['use_playlist'])
-        elif int(params['context']) == 3:
+        elif params['command'] == "merge":
             do_merge(params['output_stream'])
+        else:
+            print("Invalid command.")
 
 
 if __name__ == "__main__":
