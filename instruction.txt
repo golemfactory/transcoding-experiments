@@ -29,3 +29,4 @@ Pipeline and video comparison
     - prepare test data
     - rewrite pipeline to python? do not know what is preferred
     - move task.py to docker image
+    - read stream length from file instead requesting this value from user.

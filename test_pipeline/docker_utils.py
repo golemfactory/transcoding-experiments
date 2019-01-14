@@ -10,6 +10,13 @@ def exec_cmd(cmd, file=None):
     pc = subprocess.Popen(cmd, stdout=file)
     return pc.wait()
 
+def print_list( list_to_print, intend = 1 ):
+    for element in list_to_print:
+        intend_str = ""
+        for i in range( 0, intend ):
+            intend_str += "    "
+        print( intend_str + str( element ) )
+
 
 def default_golem_mounts(host_dir):
     
@@ -30,10 +37,18 @@ def create_environment(host_dir, mount_dirs, work_files, resource_files):
             os.makedirs(mount_dir[0])
 
 
+    ################################################
+    print("Coping files to /golem/work/:")
+    print_list( work_files )
+
     work_dir = os.path.join( host_dir, "work" )
     for file in work_files:
         destination = os.path.join( work_dir, os.path.basename(file))
         shutil.copyfile(file, destination)
+
+    ################################################
+    print("Coping files to /golem/resources/:")
+    print_list( resource_files )
 
     resources_dir = os.path.join( host_dir, "resources" )
     for file in resource_files:

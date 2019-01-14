@@ -4,7 +4,7 @@ import json
 import shutil
 
 import docker_utils as docker
-
+import extract_params
 
 
 PARAMS_TMP="working-dir/tmp/work/params.json"
@@ -36,6 +36,8 @@ def split_video(task_def, tests_dir, image):
 
     print("Splitting...")
 
+    tests_dir = os.path.join( tests_dir, "split" )
+
     # Create split command
     params = dict( task_def )
     params[ "command" ] = "split"
@@ -54,6 +56,7 @@ def split_video(task_def, tests_dir, image):
     ]
 
     # These commands will prepare environment for docker to run.
+    # work_files and resource_files will be copied to work and resources directory.
     mounts = docker.default_golem_mounts( tests_dir )
     docker.create_environment( tests_dir, mounts, work_files, resource_files )
 
@@ -61,11 +64,56 @@ def split_video(task_def, tests_dir, image):
     docker.run(image, "task.py", mounts)
 
 
+def transcoding_step(task_def, tests_dir, image):
+
+    print("Transcoding...")
+
+    # Create transcoding command
+    params = dict( task_def )
+    params[ "command" ] = "transcode"
+    params[ "use_playlist" ] = 1
+    del params[ "host_stream_path" ]        # Task definition for docker doesn't have this field.
+
+    # List files with merge lists.
+    m3u8_list = glob.glob( os.path.join( tests_dir, "split/output/" ) + "*].m3u8")
+
+    [ basename, _ ] = os.path.splitext( os.path.basename( params[ "path_to_stream" ] ) )
+
+    for m3u8_file in m3u8_list:
+
+        subtask_num = extract_params.extract_params( m3u8_file )[ "num" ]
+        subtask_dir = os.path.join( tests_dir, "transcode/" + str( subtask_num ) )
+        video_part_file = os.path.join( os.path.dirname(m3u8_file), basename + "_" + str(subtask_num) + ".ts" )
+
+        # Update params for this subtask
+        params[ "track" ] = os.path.join( "/golem/resources/", os.path.basename( m3u8_file ) )
+        save_params( params, PARAMS_TMP )
+
+        # Prepare files that should be copied to docker environment (mounted directories).
+        work_files = [
+            SCRIPT,
+            PARAMS_TMP
+        ]
+
+        resource_files = [
+            m3u8_file,
+            video_part_file
+        ]
+
+        # These commands will prepare environment for docker to run.
+        # work_files and resource_files will be copied to work and resources directory.
+        mounts = docker.default_golem_mounts( subtask_dir )
+        docker.create_environment( subtask_dir, mounts, work_files, resource_files )
+
+        # Run docker
+        docker.run(image, "task.py", mounts)
+
+
 def run_pipeline(task_def, tests_dir, image):
 
     clean_step(tests_dir)
-    split_video(task_def, os.path.join( tests_dir, "split" ), image )
-
+    split_video(task_def, tests_dir, image)
+    transcoding_step(task_def, tests_dir, image)
 
 
 def run():
