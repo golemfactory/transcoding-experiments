@@ -28,7 +28,7 @@ echo Cleanup...
 ###################################
 echo Splitting...
 
-python3 update_params.py ${TEMPLATE} ${PARAMS} "context" 1
+python3 update_params.py ${TEMPLATE} ${PARAMS} "context" split
 
 ./task.sh ${IMAGE}
 
@@ -41,7 +41,7 @@ cd working-dir/mount/resources
 playlists=($(ls | grep ].m3u8))
 cd ../../../
 
-python3 update_params.py ${PARAMS} ${PARAMS} "context" 2
+python3 update_params.py ${PARAMS} ${PARAMS} "context" transcode
 python3 update_params.py ${PARAMS} ${PARAMS} "use_playlist" 1
 
 for playlist in "${playlists[@]}"
@@ -55,7 +55,7 @@ done
 ###################################
 echo Merging...
 
-python3 update_params.py ${PARAMS} ${PARAMS} "context" 3
+python3 update_params.py ${PARAMS} ${PARAMS} "context" merge
 
 ./task.sh ${IMAGE}
 
@@ -63,7 +63,7 @@ python3 update_params.py ${PARAMS} ${PARAMS} "context" 3
 ###################################
 echo Transcoding reference video...
 
-python3 update_params.py ${PARAMS} ${PARAMS} "context" 2
+python3 update_params.py ${PARAMS} ${PARAMS} "context" transcode
 python3 update_params.py ${PARAMS} ${PARAMS} "use_playlist" 0
 python3 update_params.py ${PARAMS} ${PARAMS} "track" ${INPUT}
 
