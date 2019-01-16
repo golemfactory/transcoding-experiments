@@ -1,5 +1,6 @@
 import json
 import m3u8
+import shutil
 import os
 
 # pylint: disable=import-error
@@ -21,14 +22,19 @@ def do_transcode(track, targs, output, use_playlist):
     transcode_video(track, targs, output, use_playlist)
 
 
-def do_merge(outputfilename):
-    playlists_dir = os.path.dirname(outputfilename)
-    [output_playlist, _] = os.path.splitext(outputfilename)
+def do_merge(playlists_dir, outputfilename):
+    [output_playlist, _] = os.path.splitext(os.path.basename(outputfilename))
     merged = join_playlists(playlists_dir)
-    merged_filename = output_playlist + ".m3u8"
+    merged_filename = os.path.join( "/golem/work/", output_playlist + ".m3u8" )
     file = open(merged_filename, 'w')
     file.write(merged.dumps())
     file.close()
+
+    
+    files = os.listdir(playlists_dir)
+    for f in files:
+        shutil.move(playlists_dir+f, "/golem/work/")
+
     merge_videos(merged_filename, outputfilename)
 
 
@@ -41,7 +47,7 @@ def run():
             do_transcode(params['track'], params['targs'],
                          params['output_stream'], params['use_playlist'])
         elif params['command'] == "merge":
-            do_merge(params['output_stream'])
+            do_merge("/golem/resources/", params['output_stream'])
         else:
             print("Invalid command.")
 
