@@ -1,8 +1,11 @@
 import os
 import subprocess
+import shutil
 
 FFMPEG_COMMAND = "ffmpeg"
 FFPROBE_COMMAND = "ffprobe"
+
+TMP_DIR = "/golem/work/tmp/"
 
 
 def exec_cmd(cmd, file=None):
@@ -11,6 +14,24 @@ def exec_cmd(cmd, file=None):
 
     pc = subprocess.Popen(cmd, stdout=file)
     return pc.wait()
+
+
+def exec_cmd_to_string(cmd):
+
+    # Ensure temporary directory exists
+    os.makedirs( TMP_DIR )
+    
+    tmp_command_result_file = os.path.join(TMP_DIR, "tmp-command-result.txt")
+    
+    # Execute command and send results to file.
+    with open(tmp_command_result_file, "w") as result_file:
+        exec_cmd(cmd, result_file)
+
+    data_string = ""
+    with open(tmp_command_result_file, "r") as result_file:
+        data_string=result_file.read()
+
+    return data_string
 
 
 def split_video(input_file, output_dir, split_len):
@@ -140,3 +161,24 @@ def merge_videos_command(input_file, output):
            ]
 
     return cmd, input_file
+
+
+def get_video_len_command(input_file):
+
+    cmd = [FFPROBE_COMMAND,
+           "-v", "error",
+           "-select_streams", "v:0",
+           "-show_entries", "stream=duration",
+           "-of", "default=noprint_wrappers=1:nokey=1",
+            input_file
+    ]
+
+    return cmd
+
+def get_video_len(input_file):
+
+    cmd = get_video_len_command(input_file)
+    result = exec_cmd_to_string( cmd )
+
+    return float(result)
+

@@ -181,8 +181,8 @@ def run_pipeline(task_def, tests_dir, image):
 
     clean_step(tests_dir)
     split_video(task_def, tests_dir, image)
-    transcoding_step(task_def, tests_dir, image)
-    merging_step(task_def, tests_dir, image)
+    #transcoding_step(task_def, tests_dir, image)
+    #merging_step(task_def, tests_dir, image)
 
 
 def run():
