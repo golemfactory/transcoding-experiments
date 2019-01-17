@@ -4,7 +4,7 @@ import json
 import shutil
 
 import docker_utils as docker
-import extract_params
+from extract_params import extract_params
 
 
 PARAMS_TMP="working-dir/tmp/work/params.json"
@@ -104,19 +104,16 @@ def transcoding_step(task_def, tests_dir, image):
 
     print("Transcoding...")
 
-    # List files with merge lists.
-    m3u8_list = glob.glob( os.path.join( splitting_dir( tests_dir ), "output/" ) + "*].m3u8")
+    subtasks_file = os.path.join( splitting_dir( tests_dir ), "output/split-results.json" )
+    subtasks = load_params( subtasks_file )
 
-    [ basename, _ ] = os.path.splitext( os.path.basename( task_def[ "path_to_stream" ] ) )
+    for segment in subtasks[ "segments" ]:
 
-    for m3u8_file in m3u8_list:
-
-        subtask_num = extract_params.extract_params( m3u8_file )[ "num" ]
+        subtask_num = extract_params( segment[ "playlist" ] )[ "num" ]
         subtask_dir = transcoding_dir( tests_dir, subtask_num )
-        video_part_file = os.path.join( os.path.dirname(m3u8_file), basename + "_" + str(subtask_num) + ".ts" )
 
         # Update params for this subtask
-        track = os.path.join( "/golem/resources/", os.path.basename( m3u8_file ) )
+        track = os.path.join( "/golem/resources/", os.path.basename( segment[ "playlist" ] ) )
         create_save_transcode_params(task_def, PARAMS_TMP, track)
 
         # Prepare files that should be copied to docker environment (mounted directories).
@@ -124,9 +121,11 @@ def transcoding_step(task_def, tests_dir, image):
             PARAMS_TMP
         ]
 
+        splited_files_dir = os.path.join( splitting_dir( tests_dir ), "output/" )
+
         resource_files = [
-            m3u8_file,
-            video_part_file
+            os.path.join( splited_files_dir, segment[ "playlist" ] ),
+            os.path.join( splited_files_dir, segment[ "video_segment" ] )
         ]
 
         # These commands will prepare environment for docker to run.
@@ -171,6 +170,12 @@ def merging_step(task_def, tests_dir, image):
 
     # Run docker
     docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
+
+
+def transcode_reference(task_def, tests_dir, image):
+
+    print("Transcoding reference video...")
+    
 
 
 def run_pipeline(task_def, tests_dir, image):
