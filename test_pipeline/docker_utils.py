@@ -77,6 +77,7 @@ def run(image, script, mount_dirs):
 
     cmd = [ "docker", "run" ]
     cmd += [ "-it", "--rm" ]
+    cmd += [ "-e", "LOCAL_USER_ID=" + str( os.getuid() ) ]
     cmd += docker_mount_command(mount_dirs)
     cmd += [ image ]
     cmd += [ script ]
