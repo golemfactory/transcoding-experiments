@@ -11,7 +11,10 @@ OUTPUT_DIR = "/golem/output"
 PARAMS_FILE = "params.json"
 
 
-def do_split(path_to_stream, video_length, parts):
+def do_split(path_to_stream, parts):
+
+    video_length = ffmpeg.get_video_len( path_to_stream )
+
     split_file = ffmpeg.split_video(path_to_stream, OUTPUT_DIR, video_length / parts)
     m3u8_main_list = m3u8.load(split_file)
     for segment in m3u8_main_list.segments:
@@ -38,22 +41,26 @@ def do_merge(playlists_dir, outputfilename):
     ffmpeg.merge_videos(merged_filename, outputfilename)
 
 
+def run_ffmpeg( params ):
+
+    if params['command'] == "split":
+        do_split(params['path_to_stream'], params['parts'])
+    elif params['command'] == "transcode":
+        do_transcode(params['track'], params['targs'],
+                        params['output_stream'], params['use_playlist'])
+    elif params['command'] == "merge":
+        do_merge("/golem/resources/", params['output_stream'])
+    else:
+        print("Invalid command.")
+
+
 def run():
 
-    with open(PARAMS_FILE, 'r') as f:
-        
+    params = None
+    with open(PARAMS_FILE, 'r') as f:    
         params = json.load(f)
-        video_length = ffmpeg.get_video_len( params[ "path_to_stream" ] )
 
-        if params['command'] == "split":
-            do_split(params['path_to_stream'], video_length, params['parts'])
-        elif params['command'] == "transcode":
-            do_transcode(params['track'], params['targs'],
-                         params['output_stream'], params['use_playlist'])
-        elif params['command'] == "merge":
-            do_merge("/golem/resources/", params['output_stream'])
-        else:
-            print("Invalid command.")
+    run_ffmpeg(params)
 
 
 if __name__ == "__main__":

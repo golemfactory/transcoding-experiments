@@ -8,7 +8,6 @@ import extract_params
 
 
 PARAMS_TMP="working-dir/tmp/work/params.json"
-SCRIPT="working-dir-example/mount/work/task.py"
 
 
 
@@ -85,7 +84,6 @@ def split_video(task_def, tests_dir, image):
 
     # Prepare files that should be copied to docker environment (mounted directories).
     work_files = [
-        SCRIPT,
         PARAMS_TMP
     ]
 
@@ -99,7 +97,7 @@ def split_video(task_def, tests_dir, image):
     docker.create_environment( tests_dir, mounts, work_files, resource_files )
 
     # Run docker
-    docker.run(image, "task.py", mounts)
+    docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
 
 
 def transcoding_step(task_def, tests_dir, image):
@@ -123,7 +121,6 @@ def transcoding_step(task_def, tests_dir, image):
 
         # Prepare files that should be copied to docker environment (mounted directories).
         work_files = [
-            SCRIPT,
             PARAMS_TMP
         ]
 
@@ -138,7 +135,7 @@ def transcoding_step(task_def, tests_dir, image):
         docker.create_environment( subtask_dir, mounts, work_files, resource_files )
 
         # Run docker
-        docker.run(image, "task.py", mounts)
+        docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
 
 
 def collect_results(task_def, tests_dir):
@@ -162,7 +159,6 @@ def merging_step(task_def, tests_dir, image):
 
     # Prepare files that should be copied to docker environment (mounted directories).
     work_files = [
-        SCRIPT,
         PARAMS_TMP
     ]
 
@@ -174,15 +170,15 @@ def merging_step(task_def, tests_dir, image):
     docker.create_environment( merging_dir( tests_dir ), mounts, work_files, resource_files )
 
     # Run docker
-    docker.run(image, "task.py", mounts)
+    docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
 
 
 def run_pipeline(task_def, tests_dir, image):
 
     clean_step(tests_dir)
     split_video(task_def, tests_dir, image)
-    #transcoding_step(task_def, tests_dir, image)
-    #merging_step(task_def, tests_dir, image)
+    transcoding_step(task_def, tests_dir, image)
+    merging_step(task_def, tests_dir, image)
 
 
 def run():
