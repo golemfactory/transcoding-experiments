@@ -17,8 +17,27 @@ def do_split(path_to_stream, parts):
 
     split_file = ffmpeg.split_video(path_to_stream, OUTPUT_DIR, video_length / parts)
     m3u8_main_list = m3u8.load(split_file)
+    
+    results = dict()
+    segments_list = list()
+
     for segment in m3u8_main_list.segments:
-        create_and_dump_m3u8(OUTPUT_DIR, segment)
+
+        segment_info = dict()
+
+        filename = create_and_dump_m3u8(OUTPUT_DIR, segment)
+
+        segment_info[ "playlist" ] = os.path.basename( filename )
+        segment_info[ "video_segment" ] = segment.uri
+
+        segments_list.append( segment_info )
+
+    results[ "main_list" ] = split_file
+    results[ "segments" ] = segments_list
+    
+    results_file = os.path.join( OUTPUT_DIR, "split-results.json")
+    with open(results_file, 'w') as f:    
+        json.dump(results, f)
 
 
 def do_transcode(track, targs, output, use_playlist):
