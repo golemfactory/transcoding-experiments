@@ -46,11 +46,16 @@ def create_save_merge_params(task_def, params_dir):
     save_params( params, params_dir )
 
 
-def create_save_transcode_params(task_def, params_dir, track):
+def create_save_transcode_params(task_def, params_dir, track, use_playlist = True):
 
     params = dict( task_def )
     params[ "command" ] = "transcode"
-    params[ "use_playlist" ] = 1
+
+    if use_playlist:
+        params[ "use_playlist" ] = 1
+    else:
+        params[ "use_playlist" ] = 0
+    
     params[ "track" ] = track
     del params[ "host_stream_path" ]        # Task definition for docker doesn't have this field.
     
@@ -58,7 +63,10 @@ def create_save_transcode_params(task_def, params_dir, track):
 
 
 def transcoding_dir( tests_dir, subtask_num ):
-    return os.path.join( tests_dir, "transcode/" + str( subtask_num ) )
+    if isinstance(subtask_num, str):
+        return os.path.join( tests_dir, "transcode/" + subtask_num )
+    else:
+        return os.path.join( tests_dir, "transcode/" + str( subtask_num ) )
 
 
 def splitting_dir( tests_dir ):
@@ -176,6 +184,28 @@ def transcode_reference(task_def, tests_dir, image):
 
     print("Transcoding reference video...")
     
+    # Update params for this subtask
+    track = os.path.join( "/golem/resources/", os.path.basename( task_def[ "path_to_stream" ] ) )
+    create_save_transcode_params(task_def, PARAMS_TMP, track, False)
+
+    subtask_dir = transcoding_dir( tests_dir, "reference" )
+
+    # Prepare files that should be copied to docker environment (mounted directories).
+    work_files = [
+        PARAMS_TMP
+    ]
+
+    resource_files = [
+        task_def[ "host_stream_path" ]
+    ]
+
+    # These commands will prepare environment for docker to run.
+    # work_files and resource_files will be copied to work and resources directory.
+    mounts = docker.default_golem_mounts( subtask_dir )
+    docker.create_environment( subtask_dir, mounts, work_files, resource_files )
+
+    # Run docker
+    docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
 
 
 def run_pipeline(task_def, tests_dir, image):
@@ -184,6 +214,7 @@ def run_pipeline(task_def, tests_dir, image):
     split_video(task_def, tests_dir, image)
     transcoding_step(task_def, tests_dir, image)
     merging_step(task_def, tests_dir, image)
+    transcode_reference(task_def, tests_dir, image)
 
 
 def run():
