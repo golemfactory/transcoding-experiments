@@ -205,15 +205,42 @@ def compute_psnr_command(video, reference_video, psnr_frames_file):
     return cmd
 
 
-def compute_psnr(video, reference_video, psnr_frames_file, psnr_log_file):
+def compute_ssim_command(video, reference_video, ssim_frames_file):
 
-    cmd = compute_psnr_command( video, reference_video, psnr_frames_file)
+    cmd = [ FFMPEG_COMMAND,
+            "-i", video,
+            "-i", reference_video,
+            "-lavfi",
+            "ssim=" + ssim_frames_file,
+            "-f", "null", "-"
+    ]
+
+    return cmd
+
+
+def filter_metric(cmd, regex, log_file):
+
     psnr = exec_cmd_to_string(cmd).splitlines()
-
-    psnr = [ line for line in psnr if re.search(r'PSNR', line) ]
+    psnr = [ line for line in psnr if re.search(regex, line) ]
     
-    with open(psnr_log_file, "w") as result_file:
+    with open(log_file, "w") as result_file:
         result_file.writelines( psnr )
 
     return psnr
+
+
+def compute_psnr(video, reference_video, psnr_frames_file, psnr_log_file):
+
+    cmd = compute_psnr_command( video, reference_video, psnr_frames_file)
+    psnr = filter_metric(cmd, r'PSNR', psnr_log_file)
+
+    return psnr
+
+
+def compute_ssim(video, reference_video, ssim_frames_file, ssim_log_file):
+
+    cmd = compute_ssim_command( video, reference_video, ssim_frames_file)
+    ssim = filter_metric(cmd, r'SSIM', ssim_log_file)
+
+    return ssim
 

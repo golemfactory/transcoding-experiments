@@ -223,8 +223,15 @@ def compute_metrics(task_def, tests_dir, image):
     ssim_params = params[ "metrics_params" ][ "ssim" ]
     ssim_params[ "video" ] = os.path.basename( video_path )
     ssim_params[ "reference" ] = os.path.basename( new_reference_path )
-    ssim_params[ "psnr_output" ] = "psnr_output.txt"
-    ssim_params[ "psnr_log" ] = "psnr_log.txt"
+    ssim_params[ "output" ] = "ssim_output.txt"
+    ssim_params[ "log" ] = "ssim_log.txt"
+
+    params[ "metrics_params" ][ "psnr" ] = dict()
+    ssim_params = params[ "metrics_params" ][ "psnr" ]
+    ssim_params[ "video" ] = os.path.basename( video_path )
+    ssim_params[ "reference" ] = os.path.basename( new_reference_path )
+    ssim_params[ "output" ] = "psnr_output.txt"
+    ssim_params[ "log" ] = "psnr_log.txt"
 
     save_params(params, PARAMS_TMP)
 

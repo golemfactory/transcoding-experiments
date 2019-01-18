@@ -65,10 +65,20 @@ def compute_ssim(ssim_cmd):
 
     video_path = os.path.join(RESOURCES_DIR, ssim_cmd["video"])
     reference_path = os.path.join(RESOURCES_DIR, ssim_cmd["reference"])
-    psnr_output = os.path.join(OUTPUT_DIR, ssim_cmd["psnr_output"])
-    psnr_log = os.path.join(OUTPUT_DIR, ssim_cmd["psnr_log"])
+    output = os.path.join(OUTPUT_DIR, ssim_cmd["output"])
+    log = os.path.join(OUTPUT_DIR, ssim_cmd["log"])
 
-    ffmpeg.compute_psnr( video_path, reference_path, psnr_output, psnr_log )
+    ffmpeg.compute_ssim( video_path, reference_path, output, log )
+
+
+def compute_psnr(psnr_cmd):
+
+    video_path = os.path.join(RESOURCES_DIR, psnr_cmd["video"])
+    reference_path = os.path.join(RESOURCES_DIR, psnr_cmd["reference"])
+    output = os.path.join(OUTPUT_DIR, psnr_cmd["output"])
+    log = os.path.join(OUTPUT_DIR, psnr_cmd["log"])
+
+    ffmpeg.compute_psnr( video_path, reference_path, output, log )
 
 
 def compute_metrics(metrics_params):
@@ -76,6 +86,8 @@ def compute_metrics(metrics_params):
     if "ssim" in metrics_params:
         compute_ssim( metrics_params["ssim"] )
 
+    if "psnr" in metrics_params:
+        compute_psnr( metrics_params["psnr"] )
 
 
 def run_ffmpeg( params ):
