@@ -61,33 +61,23 @@ def do_merge(playlists_dir, outputfilename):
     ffmpeg.merge_videos(merged_filename, outputfilename)
 
 
-def compute_ssim(ssim_cmd):
+def compute_metric(cmd, function):
 
-    video_path = os.path.join(RESOURCES_DIR, ssim_cmd["video"])
-    reference_path = os.path.join(RESOURCES_DIR, ssim_cmd["reference"])
-    output = os.path.join(OUTPUT_DIR, ssim_cmd["output"])
-    log = os.path.join(OUTPUT_DIR, ssim_cmd["log"])
+    video_path = os.path.join(RESOURCES_DIR, cmd["video"])
+    reference_path = os.path.join(RESOURCES_DIR, cmd["reference"])
+    output = os.path.join(OUTPUT_DIR, cmd["output"])
+    log = os.path.join(OUTPUT_DIR, cmd["log"])
 
-    ffmpeg.compute_ssim( video_path, reference_path, output, log )
-
-
-def compute_psnr(psnr_cmd):
-
-    video_path = os.path.join(RESOURCES_DIR, psnr_cmd["video"])
-    reference_path = os.path.join(RESOURCES_DIR, psnr_cmd["reference"])
-    output = os.path.join(OUTPUT_DIR, psnr_cmd["output"])
-    log = os.path.join(OUTPUT_DIR, psnr_cmd["log"])
-
-    ffmpeg.compute_psnr( video_path, reference_path, output, log )
+    function( video_path, reference_path, output, log )
 
 
 def compute_metrics(metrics_params):
 
     if "ssim" in metrics_params:
-        compute_ssim( metrics_params["ssim"] )
+        compute_metric( metrics_params["ssim"], ffmpeg.compute_ssim )
 
     if "psnr" in metrics_params:
-        compute_psnr( metrics_params["psnr"] )
+        compute_metric( metrics_params["psnr"], ffmpeg.compute_psnr )
 
 
 def run_ffmpeg( params ):
