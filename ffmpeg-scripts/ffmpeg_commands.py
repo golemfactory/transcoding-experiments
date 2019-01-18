@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shutil
+import re
 
 FFMPEG_COMMAND = "ffmpeg"
 FFPROBE_COMMAND = "ffprobe"
@@ -12,20 +13,27 @@ def exec_cmd(cmd, file=None):
     print("Executing command:")
     print(cmd)
 
-    pc = subprocess.Popen(cmd, stdout=file)
+    pc = subprocess.Popen(cmd, stdout=file, stderr=file)
     return pc.wait()
+
+
+def exec_cmd_to_file(cmd, filepath):
+
+    # Ensure directory exists
+    filedir = os.path.dirname( filepath )
+    if not os.path.exists( filedir ):
+        os.makedirs( filedir )
+
+    # Execute command and send results to file.
+    with open(filepath, "w") as result_file:
+        exec_cmd(cmd, result_file)
 
 
 def exec_cmd_to_string(cmd):
 
-    # Ensure temporary directory exists
-    os.makedirs( TMP_DIR )
-    
-    tmp_command_result_file = os.path.join(TMP_DIR, "tmp-command-result.txt")
-    
     # Execute command and send results to file.
-    with open(tmp_command_result_file, "w") as result_file:
-        exec_cmd(cmd, result_file)
+    tmp_command_result_file = os.path.join(TMP_DIR, "tmp-command-result.txt")
+    exec_cmd_to_file(cmd, tmp_command_result_file)
 
     data_string = ""
     with open(tmp_command_result_file, "r") as result_file:
@@ -175,10 +183,37 @@ def get_video_len_command(input_file):
 
     return cmd
 
+
 def get_video_len(input_file):
 
     cmd = get_video_len_command(input_file)
     result = exec_cmd_to_string( cmd )
 
     return float(result)
+
+
+def compute_psnr_command(video, reference_video, psnr_frames_file):
+
+    cmd = [ FFMPEG_COMMAND,
+            "-i", video,
+            "-i", reference_video,
+            "-lavfi",
+            "psnr=" + psnr_frames_file,
+            "-f", "null", "-"
+    ]
+
+    return cmd
+
+
+def compute_psnr(video, reference_video, psnr_frames_file, psnr_log_file):
+
+    cmd = compute_psnr_command( video, reference_video, psnr_frames_file)
+    psnr = exec_cmd_to_string(cmd).splitlines()
+
+    psnr = [ line for line in psnr if re.search(r'PSNR', line) ]
+    
+    with open(psnr_log_file, "w") as result_file:
+        result_file.writelines( psnr )
+
+    return psnr
 

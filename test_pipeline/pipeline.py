@@ -72,13 +72,29 @@ def transcoding_dir( tests_dir, subtask_num ):
 def splitting_dir( tests_dir ):
     return os.path.join( tests_dir, "split" )
 
+
 def merging_dir( tests_dir ):
     return os.path.join( tests_dir, "merge" )
+
+
+def metrics_dir( tests_dir ):
+    return os.path.join( tests_dir, "metrics" )
 
 
 def clean_step(tests_dir):
     if os.path.exists( tests_dir ):
         shutil.rmtree(tests_dir)
+
+
+def run_ffmpeg_task(image, task_dir, work_files, resource_files):
+
+    # These commands will prepare environment for docker to run.
+    # work_files and resource_files will be copied to work and resources directory.
+    mounts = docker.default_golem_mounts( task_dir )
+    docker.create_environment( task_dir, mounts, work_files, resource_files )
+
+    # Run docker
+    docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
 
 
 def split_video(task_def, tests_dir, image):
@@ -99,13 +115,7 @@ def split_video(task_def, tests_dir, image):
         task_def[ "host_stream_path" ],
     ]
 
-    # These commands will prepare environment for docker to run.
-    # work_files and resource_files will be copied to work and resources directory.
-    mounts = docker.default_golem_mounts( tests_dir )
-    docker.create_environment( tests_dir, mounts, work_files, resource_files )
-
-    # Run docker
-    docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
+    run_ffmpeg_task(image, tests_dir, work_files, resource_files)
 
 
 def transcoding_step(task_def, tests_dir, image):
@@ -135,14 +145,8 @@ def transcoding_step(task_def, tests_dir, image):
             os.path.join( splited_files_dir, segment[ "playlist" ] ),
             os.path.join( splited_files_dir, segment[ "video_segment" ] )
         ]
-
-        # These commands will prepare environment for docker to run.
-        # work_files and resource_files will be copied to work and resources directory.
-        mounts = docker.default_golem_mounts( subtask_dir )
-        docker.create_environment( subtask_dir, mounts, work_files, resource_files )
-
-        # Run docker
-        docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
+        
+        run_ffmpeg_task(image, subtask_dir, work_files, resource_files)
 
 
 def collect_results(task_def, tests_dir):
@@ -171,13 +175,7 @@ def merging_step(task_def, tests_dir, image):
 
     resource_files = collect_results(task_def, tests_dir)
 
-    # These commands will prepare environment for docker to run.
-    # work_files and resource_files will be copied to work and resources directory.
-    mounts = docker.default_golem_mounts( merging_dir( tests_dir ) )
-    docker.create_environment( merging_dir( tests_dir ), mounts, work_files, resource_files )
-
-    # Run docker
-    docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
+    run_ffmpeg_task(image, merging_dir( tests_dir ), work_files, resource_files)
 
 
 def transcode_reference(task_def, tests_dir, image):
@@ -198,24 +196,60 @@ def transcode_reference(task_def, tests_dir, image):
     resource_files = [
         task_def[ "host_stream_path" ]
     ]
+    
+    run_ffmpeg_task(image, subtask_dir, work_files, resource_files)
 
-    # These commands will prepare environment for docker to run.
-    # work_files and resource_files will be copied to work and resources directory.
-    mounts = docker.default_golem_mounts( subtask_dir )
-    docker.create_environment( subtask_dir, mounts, work_files, resource_files )
 
-    # Run docker
-    docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
+def compute_metrics(task_def, tests_dir, image):
+
+    print("Computing metrics...")
+
+    reference_out_name = os.path.basename( task_def["output_stream"] )
+    [ name, ext ] = os.path.splitext( reference_out_name )
+    reference_out_name = name + "_TC" + ext
+
+    video_path = os.path.join( merging_dir( tests_dir ), "output", os.path.basename( task_def["output_stream"] ) )
+    reference_path = os.path.join( transcoding_dir( tests_dir, "reference" ), "output", reference_out_name )
+    
+    new_reference_path = reference_path
+    #new_reference_path = os.path.join( os.path.dirname( reference_path ), "reference-" + os.path.basename( reference_path ) )
+    #shutil.move(reference_path, new_reference_path)
+
+    params = dict()
+    params[ "command" ] = "compute-metrics"
+    params[ "metrics_params" ] = dict()
+    
+    params[ "metrics_params" ][ "ssim" ] = dict()
+    ssim_params = params[ "metrics_params" ][ "ssim" ]
+    ssim_params[ "video" ] = os.path.basename( video_path )
+    ssim_params[ "reference" ] = os.path.basename( new_reference_path )
+    ssim_params[ "psnr_output" ] = "psnr_output.txt"
+    ssim_params[ "psnr_log" ] = "psnr_log.txt"
+
+    save_params(params, PARAMS_TMP)
+
+    # Prepare files that should be copied to docker environment (mounted directories).
+    work_files = [
+        PARAMS_TMP
+    ]
+
+    resource_files = [
+        video_path,
+        new_reference_path
+    ]
+    
+    run_ffmpeg_task(image, metrics_dir( tests_dir ), work_files, resource_files)
 
 
 def run_pipeline(task_def, tests_dir, image):
 
-    clean_step(tests_dir)
-    split_video(task_def, tests_dir, image)
-    transcoding_step(task_def, tests_dir, image)
-    merging_step(task_def, tests_dir, image)
-    transcode_reference(task_def, tests_dir, image)
+    #clean_step(tests_dir)
+    #split_video(task_def, tests_dir, image)
+    #transcoding_step(task_def, tests_dir, image)
+    #merging_step(task_def, tests_dir, image)
+    #transcode_reference(task_def, tests_dir, image)
 
+    compute_metrics(task_def, tests_dir, image)
 
 def run():
 

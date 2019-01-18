@@ -8,6 +8,7 @@ import ffmpeg_commands as ffmpeg
 from m3u8_utils import create_and_dump_m3u8, join_playlists
 
 OUTPUT_DIR = "/golem/output"
+RESOURCES_DIR = "/golem/resources"
 PARAMS_FILE = "params.json"
 
 
@@ -60,6 +61,23 @@ def do_merge(playlists_dir, outputfilename):
     ffmpeg.merge_videos(merged_filename, outputfilename)
 
 
+def compute_ssim(ssim_cmd):
+
+    video_path = os.path.join(RESOURCES_DIR, ssim_cmd["video"])
+    reference_path = os.path.join(RESOURCES_DIR, ssim_cmd["reference"])
+    psnr_output = os.path.join(OUTPUT_DIR, ssim_cmd["psnr_output"])
+    psnr_log = os.path.join(OUTPUT_DIR, ssim_cmd["psnr_log"])
+
+    ffmpeg.compute_psnr( video_path, reference_path, psnr_output, psnr_log )
+
+
+def compute_metrics(metrics_params):
+
+    if "ssim" in metrics_params:
+        compute_ssim( metrics_params["ssim"] )
+
+
+
 def run_ffmpeg( params ):
 
     if params['command'] == "split":
@@ -69,6 +87,8 @@ def run_ffmpeg( params ):
                         params['output_stream'], params['use_playlist'])
     elif params['command'] == "merge":
         do_merge("/golem/resources/", params['output_stream'])
+    elif params['command'] == "compute-metrics":
+        compute_metrics(params["metrics_params"])
     else:
         print("Invalid command.")
 
