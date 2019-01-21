@@ -3,6 +3,18 @@ import subprocess
 import sys
 
 
+
+BITRATE_TOLARANCE = 1000
+
+ignored_fields = [
+    "filename",
+    "bit_rate",
+    "size"
+]
+
+
+
+
 def exec_cmd(cmd, file=None):
     pc = subprocess.Popen(cmd, stdout=file)
     return pc.wait()
@@ -28,25 +40,40 @@ def read_json(filename):
         return data
 
 
+def print_different(main_stream, ref_stream, attribute, where):
+    print("Difference in \"{}\"".format(where))
+    print("Main video[{}]: {}".format(attribute, str(main_stream[attribute])))
+    print("Reference video[{}]: {}\n".format(attribute, str(ref_stream[attribute])))
+
+
+def compare_with_tolerance(main_stream, ref_stream, where):
+
+    # Compare ignored attributes with tolerance
+    if abs( int( main_stream[ "bit_rate" ] ) - int( ref_stream[ "bit_rate" ] ) ) > BITRATE_TOLARANCE:
+        print_different(main_stream, ref_stream, "bit_rate", where)
+
+
 def compare_format(main_format, ref_format):
     assert len(main_format) == len(ref_format)
     for attr in main_format:
-        if attr == "filename":
+        if attr in ignored_fields:
             continue
 
         if main_format[attr] != ref_format[attr]:
-            print("Difference in \"format\"")
-            print("Main video[{}]: {}".format(attr, str(main_format[attr])))
-            print("Reference video[{}]: {}\n".format(attr, str(ref_format[attr])))
+            print_different(main_format, ref_format, attr, "format")
+    compare_with_tolerance(main_format, ref_format, "format")
 
 
 def compare_stream(main_stream, ref_stream):
     assert len(main_stream) == len(ref_stream)
     for attr in main_stream:
+        if attr in ignored_fields:
+            continue
+
         if main_stream[attr] != ref_stream[attr]:
-            print("Difference in \"stream[{}]\"".format(main_stream['index']))
-            print("Main video[{}]: {}".format(attr, str(main_stream[attr])))
-            print("Reference video[{}]: {}\n".format(attr, str(ref_stream[attr])))
+            print_different(main_stream, ref_stream, attr, "stream[{}]".format(main_stream['index']))
+
+    compare_with_tolerance(main_stream, ref_stream, "stream[{}]".format(main_stream['index']))
 
 
 def compare_metadata(main_json, ref_json):

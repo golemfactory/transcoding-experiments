@@ -101,6 +101,6 @@ echo Reference keyframes...
 echo ""
 echo Summary...
 
-python3 compare_video.py ${PSNR_LOG} ${SSIM_LOG} ${METADATA_OUT} ${METADATA_REF}
+python3 test_pipeline/compare_video.py ${PSNR_LOG} ${SSIM_LOG} ${METADATA_OUT} ${METADATA_REF}
 
 

@@ -6,6 +6,8 @@ import shutil
 import docker_utils as docker
 from extract_params import extract_params
 
+import compare_video
+
 
 PARAMS_TMP="working-dir/tmp/work/params.json"
 
@@ -263,6 +265,20 @@ def compute_metrics(task_def, tests_dir, image):
     run_ffmpeg_task(image, metrics_dir( tests_dir ), work_files, resource_files)
 
 
+def compare_step(task_def, tests_dir):
+
+    results_dir = os.path.join( metrics_dir( tests_dir ), "output" )
+
+    video_meta_path = os.path.join( results_dir, "video_metadata_output.txt" )
+    reference_meta_path = os.path.join( results_dir, "reference_metadata_output.txt" )
+    psnr_log = os.path.join( results_dir, "psnr_log.txt" )
+    ssim_log = os.path.join( results_dir, "ssim_log.txt" )
+
+    compare_video.print_psnr(psnr_log)
+    compare_video.print_ssim(ssim_log)
+    compare_video.compare_metadata(video_meta_path, reference_meta_path)
+
+
 def run_pipeline(task_def, tests_dir, image):
 
     #clean_step(tests_dir)
@@ -272,6 +288,8 @@ def run_pipeline(task_def, tests_dir, image):
     #transcode_reference(task_def, tests_dir, image)
 
     compute_metrics(task_def, tests_dir, image)
+    compare_step(task_def, tests_dir)
+
 
 def run():
 
