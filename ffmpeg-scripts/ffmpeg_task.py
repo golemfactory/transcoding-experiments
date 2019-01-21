@@ -71,6 +71,14 @@ def compute_metric(cmd, function):
     function( video_path, reference_path, output, log )
 
 
+def get_metadata(cmd):
+
+    video_path = os.path.join(RESOURCES_DIR, cmd["video"])
+    output = os.path.join(OUTPUT_DIR, cmd["output"])
+
+    ffmpeg.get_metadata(video_path, output)
+
+
 def compute_metrics(metrics_params):
 
     if "ssim" in metrics_params:
@@ -78,6 +86,10 @@ def compute_metrics(metrics_params):
 
     if "psnr" in metrics_params:
         compute_metric( metrics_params["psnr"], ffmpeg.compute_psnr )
+
+    if "metadata" in metrics_params:
+        for metadata_request in metrics_params["metadata"]:
+            get_metadata(metadata_request)
 
 
 def run_ffmpeg( params ):

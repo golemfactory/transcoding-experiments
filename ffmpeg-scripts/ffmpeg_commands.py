@@ -218,6 +218,19 @@ def compute_ssim_command(video, reference_video, ssim_frames_file):
     return cmd
 
 
+def get_metadata_command(video):
+
+    cmd = [ FFPROBE_COMMAND,
+            "-v", "quiet",
+            "-print_format", "json",
+            "-show_format",
+            "-show_streams",
+            video
+    ]
+
+    return cmd
+
+
 def filter_metric(cmd, regex, log_file):
 
     psnr = exec_cmd_to_string(cmd).splitlines()
@@ -243,4 +256,11 @@ def compute_ssim(video, reference_video, ssim_frames_file, ssim_log_file):
     ssim = filter_metric(cmd, r'SSIM', ssim_log_file)
 
     return ssim
+
+
+def get_metadata(video, outputfile):
+
+    cmd = get_metadata_command( video )
+    exec_cmd_to_file(cmd, outputfile)
+
 
