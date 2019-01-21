@@ -281,11 +281,11 @@ def compare_step(task_def, tests_dir):
 
 def run_pipeline(task_def, tests_dir, image):
 
-    #clean_step(tests_dir)
-    #split_video(task_def, tests_dir, image)
-    #transcoding_step(task_def, tests_dir, image)
-    #merging_step(task_def, tests_dir, image)
-    #transcode_reference(task_def, tests_dir, image)
+    clean_step(tests_dir)
+    split_video(task_def, tests_dir, image)
+    transcoding_step(task_def, tests_dir, image)
+    merging_step(task_def, tests_dir, image)
+    transcode_reference(task_def, tests_dir, image)
 
     compute_metrics(task_def, tests_dir, image)
     compare_step(task_def, tests_dir)
@@ -293,7 +293,7 @@ def run_pipeline(task_def, tests_dir, image):
 
 def run():
 
-    PARAMS="working-dir/mount/work/params.json"
+    PARAMS="working-dir/mount/work/Bear-params.json"
 
     task_def = load_params(PARAMS)
     tests_dir = os.path.join( os.getcwd(), "working-dir/test/" )

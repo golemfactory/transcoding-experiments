@@ -50,7 +50,11 @@ def compare_with_tolerance(main_stream, ref_stream, where):
 
     # Compare ignored attributes with tolerance
     if abs( int( main_stream[ "bit_rate" ] ) - int( ref_stream[ "bit_rate" ] ) ) > BITRATE_TOLARANCE:
+
         print_different(main_stream, ref_stream, "bit_rate", where)
+
+        # It's always true here, but print message first.
+        assert( abs( int( main_stream[ "bit_rate" ] ) - int( ref_stream[ "bit_rate" ] ) ) <= BITRATE_TOLARANCE )
 
 
 def compare_format(main_format, ref_format):
@@ -60,7 +64,12 @@ def compare_format(main_format, ref_format):
             continue
 
         if main_format[attr] != ref_format[attr]:
+
             print_different(main_format, ref_format, attr, "format")
+
+            # It's always true here, but print message first.
+            assert( main_format[attr] == ref_format[attr] )
+            
     compare_with_tolerance(main_format, ref_format, "format")
 
 
@@ -71,7 +80,11 @@ def compare_stream(main_stream, ref_stream):
             continue
 
         if main_stream[attr] != ref_stream[attr]:
+
             print_different(main_stream, ref_stream, attr, "stream[{}]".format(main_stream['index']))
+
+            # It's always true here, but print message first.
+            assert( main_stream[attr] == ref_stream[attr] )
 
     compare_with_tolerance(main_stream, ref_stream, "stream[{}]".format(main_stream['index']))
 
