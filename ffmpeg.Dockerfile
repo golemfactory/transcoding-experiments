@@ -1,6 +1,6 @@
 # Dockerfile for tasks requiring ffmpeg.
 
-FROM golemfactory/base:1.3
+FROM golemfactory/base:1.4
 
 MAINTAINER Artur Zawłocki <artur.zawlocki@imapp.pl>
 
