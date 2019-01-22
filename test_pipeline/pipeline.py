@@ -118,6 +118,7 @@ def run_ffmpeg_task(image, task_dir, work_files, resource_files, docker_log):
 
 def split_video(task_def, tests_dir, image):
 
+    print("==================================================================")
     print("Splitting...")
 
     tests_dir = os.path.join( tests_dir, "split" )
@@ -139,6 +140,7 @@ def split_video(task_def, tests_dir, image):
 
 def transcoding_step(task_def, tests_dir, image):
 
+    print("==================================================================")
     print("Transcoding...")
 
     subtasks_file = os.path.join( splitting_dir( tests_dir ), "output/split-results.json" )
@@ -182,6 +184,7 @@ def collect_results(task_def, tests_dir):
 
 def merging_step(task_def, tests_dir, image):
 
+    print("==================================================================")
     print("Merging...")
 
     # Create metge command
@@ -194,11 +197,12 @@ def merging_step(task_def, tests_dir, image):
 
     resource_files = collect_results(task_def, tests_dir)
 
-    run_ffmpeg_task(image, merging_dir( tests_dir ), work_files, resource_files, merge_log_file(tests_dir))
+    run_ffmpeg_task(image, merging_dir( tests_dir ), work_files, resource_files, merge_log_file(merging_dir(tests_dir)))
 
 
 def transcode_reference(task_def, tests_dir, image):
 
+    print("==================================================================")
     print("Transcoding reference video...")
     
     # Update params for this subtask
@@ -221,6 +225,7 @@ def transcode_reference(task_def, tests_dir, image):
 
 def compute_metrics(task_def, tests_dir, image):
 
+    print("==================================================================")
     print("Computing metrics...")
 
     reference_out_name = os.path.basename( task_def["output_stream"] )
@@ -279,7 +284,7 @@ def compute_metrics(task_def, tests_dir, image):
         new_reference_path
     ]
     
-    run_ffmpeg_task(image, metrics_dir( tests_dir ), work_files, resource_files, metrics_log_file(tests_dir))
+    run_ffmpeg_task(image, metrics_dir( tests_dir ), work_files, resource_files, metrics_log_file(metrics_dir(tests_dir)))
 
 
 def compare_step(task_def, tests_dir):
@@ -291,9 +296,13 @@ def compare_step(task_def, tests_dir):
     psnr_log = os.path.join( results_dir, "psnr_log.txt" )
     ssim_log = os.path.join( results_dir, "ssim_log.txt" )
 
-    compare_video.compare_psnr(psnr_log)
-    compare_video.compare_ssim(ssim_log)
-    compare_video.compare_metadata(video_meta_path, reference_meta_path)
+    success = True
+
+    success = compare_video.compare_psnr(psnr_log) and success
+    success = compare_video.compare_ssim(ssim_log) and success
+    success = compare_video.compare_metadata(video_meta_path, reference_meta_path) and success
+
+    return success
 
 
 def run_pipeline(task_def, tests_dir, image):
@@ -305,7 +314,9 @@ def run_pipeline(task_def, tests_dir, image):
     transcode_reference(task_def, tests_dir, image)
 
     compute_metrics(task_def, tests_dir, image)
-    compare_step(task_def, tests_dir)
+    success = compare_step(task_def, tests_dir)
+
+    assert(success)
 
 
 def run():

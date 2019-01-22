@@ -6,7 +6,7 @@ import re
 
 BITRATE_TOLARANCE = 1000
 PSNR_THRESHOLD = 70
-SSIM_THRESHOLD = 95
+SSIM_THRESHOLD = 0.98
 
 ignored_fields = [
     "filename",
@@ -67,22 +67,36 @@ def print_ssim(filename):
             return metric
 
 
+def compare_with_threshold(metrics, metric, value):
+
+    if metrics[ metric ] <= value:
+        print("{} = {} is lower then accepted threshold: {}".format(metric,metrics[ metric ], value) )
+        return False
+    return True
+
+
 def compare_psnr(filename):
 
     metrics = print_psnr(filename)
 
-    assert( metrics[ "Y" ] > PSNR_THRESHOLD )
-    assert( metrics[ "U" ] > PSNR_THRESHOLD )
-    assert( metrics[ "V" ] > PSNR_THRESHOLD )
+    success = True
+    success = compare_with_threshold( metrics, "Y", PSNR_THRESHOLD) and success
+    success = compare_with_threshold( metrics, "U", PSNR_THRESHOLD) and success
+    success = compare_with_threshold( metrics, "V", PSNR_THRESHOLD) and success
+
+    return success
 
 
 def compare_ssim(filename):
 
     metrics = print_ssim(filename)
 
-    assert( metrics[ "Y" ] > SSIM_THRESHOLD )
-    assert( metrics[ "U" ] > SSIM_THRESHOLD )
-    assert( metrics[ "V" ] > SSIM_THRESHOLD )
+    success = True
+    success = compare_with_threshold( metrics, "Y", SSIM_THRESHOLD) and success
+    success = compare_with_threshold( metrics, "U", SSIM_THRESHOLD) and success
+    success = compare_with_threshold( metrics, "V", SSIM_THRESHOLD) and success
+
+    return success
 
 
 def read_json(filename):
@@ -98,17 +112,22 @@ def print_different(main_stream, ref_stream, attribute, where):
 
 
 def compare_with_tolerance(main_stream, ref_stream, where):
+    
+    success = True
 
     # Compare ignored attributes with tolerance
     if abs( int( main_stream[ "bit_rate" ] ) - int( ref_stream[ "bit_rate" ] ) ) > BITRATE_TOLARANCE:
 
         print_different(main_stream, ref_stream, "bit_rate", where)
+        success = False
 
-        # It's always true here, but print message first.
-        assert( abs( int( main_stream[ "bit_rate" ] ) - int( ref_stream[ "bit_rate" ] ) ) <= BITRATE_TOLARANCE )
+    return success
 
 
 def compare_format(main_format, ref_format):
+    
+    success = True
+
     assert len(main_format) == len(ref_format)
     for attr in main_format:
         if attr in ignored_fields:
@@ -117,14 +136,15 @@ def compare_format(main_format, ref_format):
         if main_format[attr] != ref_format[attr]:
 
             print_different(main_format, ref_format, attr, "format")
-
-            # It's always true here, but print message first.
-            assert( main_format[attr] == ref_format[attr] )
+            success = False
             
-    compare_with_tolerance(main_format, ref_format, "format")
+    success = compare_with_tolerance(main_format, ref_format, "format") and success
+    return success
 
 
 def compare_stream(main_stream, ref_stream):
+    success = True
+    
     assert len(main_stream) == len(ref_stream)
     for attr in main_stream:
         if attr in ignored_fields:
@@ -133,21 +153,25 @@ def compare_stream(main_stream, ref_stream):
         if main_stream[attr] != ref_stream[attr]:
 
             print_different(main_stream, ref_stream, attr, "stream[{}]".format(main_stream['index']))
+            success = False
 
-            # It's always true here, but print message first.
-            assert( main_stream[attr] == ref_stream[attr] )
-
-    compare_with_tolerance(main_stream, ref_stream, "stream[{}]".format(main_stream['index']))
+    success = compare_with_tolerance(main_stream, ref_stream, "stream[{}]".format(main_stream['index'])) and success
+    return success
 
 
 def compare_metadata(main_json, ref_json):
+    
+    success = True
+    
     main_data = read_json(main_json)
     ref_data = read_json(ref_json)
 
-    compare_format(main_data['format'], ref_data['format'])
+    success = compare_format(main_data['format'], ref_data['format'])
     assert len(main_data['streams']) == len(ref_data['streams'])
     for i in range(0, len(main_data['streams'])):
-        compare_stream(main_data['streams'][i], ref_data['streams'][i])
+        success = compare_stream(main_data['streams'][i], ref_data['streams'][i]) and success
+
+    return success
 
 
 def run():
