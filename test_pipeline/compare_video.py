@@ -1,7 +1,7 @@
 import json
 import subprocess
 import sys
-
+import re
 
 
 BITRATE_TOLARANCE = 1000
@@ -20,18 +20,49 @@ def exec_cmd(cmd, file=None):
     return pc.wait()
 
 
+def parse_psnr(content):
+
+    expression = r'y:([\w\d|\.]*) u:([\w\d|\.]*) v:([\w\d|\.]*) average:([\w\d|\.]*) min:([\w\d|\.]*) max:([\w\d|\.]*)' 
+    results = re.search( expression, content, re.I)
+
+    metric = dict()
+    metric[ "Y" ] = float(results.group(1))
+    metric[ "U" ] = float(results.group(2))
+    metric[ "V" ] = float(results.group(3))
+    metric[ "average" ] = float(results.group(4))
+    metric[ "min" ] = float(results.group(5))
+    metric[ "max" ] = float(results.group(6))
+
+    return metric
+
+def parse_ssim(content):
+
+    expression = r'Y:([\d|\.]*) (\(.*\)) U:([\d|\.]*) (\(.*\)) V:([\d|\.]*) ' 
+    results = re.search( expression, content, re.I)
+
+    metric = dict()
+    metric[ "Y" ] = float(results.group(1))
+    metric[ "U" ] = float(results.group(3))
+    metric[ "V" ] = float(results.group(5))
+
+    return metric
+
 def print_psnr(filename):
     print("PSNR output:")
     with open(filename, "r") as ins:
         for line in ins:
-            print("\t" + line)
+            metric = parse_psnr(line)
+            print( metric )
+            return metric
 
 
 def print_ssim(filename):
     print("SSIM output:")
     with open(filename, "r") as ins:
         for line in ins:
-            print("\t" + line)
+            metric = parse_ssim(line)
+            print( metric )
+            return metric
 
 
 def read_json(filename):
