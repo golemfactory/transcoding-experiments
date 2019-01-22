@@ -5,6 +5,8 @@ import re
 
 
 BITRATE_TOLARANCE = 1000
+PSNR_THRESHOLD = 70
+SSIM_THRESHOLD = 95
 
 ignored_fields = [
     "filename",
@@ -63,6 +65,24 @@ def print_ssim(filename):
             metric = parse_ssim(line)
             print( metric )
             return metric
+
+
+def compare_psnr(filename):
+
+    metrics = print_psnr(filename)
+
+    assert( metrics[ "Y" ] > PSNR_THRESHOLD )
+    assert( metrics[ "U" ] > PSNR_THRESHOLD )
+    assert( metrics[ "V" ] > PSNR_THRESHOLD )
+
+
+def compare_ssim(filename):
+
+    metrics = print_ssim(filename)
+
+    assert( metrics[ "Y" ] > SSIM_THRESHOLD )
+    assert( metrics[ "U" ] > SSIM_THRESHOLD )
+    assert( metrics[ "V" ] > SSIM_THRESHOLD )
 
 
 def read_json(filename):

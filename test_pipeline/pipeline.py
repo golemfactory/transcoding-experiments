@@ -274,8 +274,8 @@ def compare_step(task_def, tests_dir):
     psnr_log = os.path.join( results_dir, "psnr_log.txt" )
     ssim_log = os.path.join( results_dir, "ssim_log.txt" )
 
-    compare_video.print_psnr(psnr_log)
-    compare_video.print_ssim(ssim_log)
+    compare_video.compare_psnr(psnr_log)
+    compare_video.compare_ssim(ssim_log)
     compare_video.compare_metadata(video_meta_path, reference_meta_path)
 
 
