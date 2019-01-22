@@ -7,8 +7,21 @@ def exec_cmd(cmd, file=None):
     print("Executing command:")
     print(cmd)
 
-    pc = subprocess.Popen(cmd, stdout=file)
+    pc = subprocess.Popen(cmd, stdout=file, stderr=file)
     return pc.wait()
+
+
+def exec_cmd_to_file(cmd, filepath):
+
+    # Ensure directory exists
+    filedir = os.path.dirname( filepath )
+    if not os.path.exists( filedir ):
+        os.makedirs( filedir )
+
+    # Execute command and send results to file.
+    with open(filepath, "w") as result_file:
+        exec_cmd(cmd, result_file)
+
 
 def print_list( list_to_print, intend = 1 ):
     for element in list_to_print:
@@ -73,7 +86,7 @@ def docker_mount_command(mount_dirs):
     return cmd
 
 
-def run(image, script, mount_dirs):
+def run(image, script, mount_dirs, docker_log):
 
     cmd = [ "docker", "run" ]
     cmd += [ "--rm" ]
@@ -83,7 +96,7 @@ def run(image, script, mount_dirs):
     cmd += [ image ]
     cmd += [ "python3 " + script ]
 
-    exec_cmd(cmd)
+    exec_cmd_to_file(cmd, docker_log)
 
 
 

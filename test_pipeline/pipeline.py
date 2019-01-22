@@ -11,6 +11,23 @@ import compare_video
 
 PARAMS_TMP="working-dir/tmp/work/params.json"
 
+SPLIT_LOG = "split.log"
+MERGE_LOG = "merge.log"
+TRANSCODING_LOG = "transcoding.log"
+METRICS_LOG = "metrics-generation.log"
+
+
+def split_log_file(tests_dir):
+    return os.path.join(tests_dir, SPLIT_LOG)
+
+def merge_log_file(tests_dir):
+    return os.path.join(tests_dir, MERGE_LOG)
+
+def transcoding_log_file(tests_dir, subtask_num):
+    return os.path.join( transcoding_dir(tests_dir, subtask_num), TRANSCODING_LOG)
+
+def metrics_log_file(tests_dir):
+    return os.path.join(tests_dir, METRICS_LOG)
 
 
 def load_params(file):
@@ -88,7 +105,7 @@ def clean_step(tests_dir):
         shutil.rmtree(tests_dir)
 
 
-def run_ffmpeg_task(image, task_dir, work_files, resource_files):
+def run_ffmpeg_task(image, task_dir, work_files, resource_files, docker_log):
 
     # These commands will prepare environment for docker to run.
     # work_files and resource_files will be copied to work and resources directory.
@@ -96,7 +113,7 @@ def run_ffmpeg_task(image, task_dir, work_files, resource_files):
     docker.create_environment( task_dir, mounts, work_files, resource_files )
 
     # Run docker
-    docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts)
+    docker.run(image, "/golem/scripts/ffmpeg_task.py", mounts, docker_log)
 
 
 def split_video(task_def, tests_dir, image):
@@ -117,7 +134,7 @@ def split_video(task_def, tests_dir, image):
         task_def[ "host_stream_path" ],
     ]
 
-    run_ffmpeg_task(image, tests_dir, work_files, resource_files)
+    run_ffmpeg_task(image, tests_dir, work_files, resource_files, split_log_file(tests_dir))
 
 
 def transcoding_step(task_def, tests_dir, image):
@@ -148,7 +165,7 @@ def transcoding_step(task_def, tests_dir, image):
             os.path.join( splited_files_dir, segment[ "video_segment" ] )
         ]
         
-        run_ffmpeg_task(image, subtask_dir, work_files, resource_files)
+        run_ffmpeg_task(image, subtask_dir, work_files, resource_files, transcoding_log_file(tests_dir, subtask_num))
 
 
 def collect_results(task_def, tests_dir):
@@ -177,7 +194,7 @@ def merging_step(task_def, tests_dir, image):
 
     resource_files = collect_results(task_def, tests_dir)
 
-    run_ffmpeg_task(image, merging_dir( tests_dir ), work_files, resource_files)
+    run_ffmpeg_task(image, merging_dir( tests_dir ), work_files, resource_files, merge_log_file(tests_dir))
 
 
 def transcode_reference(task_def, tests_dir, image):
@@ -199,7 +216,7 @@ def transcode_reference(task_def, tests_dir, image):
         task_def[ "host_stream_path" ]
     ]
     
-    run_ffmpeg_task(image, subtask_dir, work_files, resource_files)
+    run_ffmpeg_task(image, subtask_dir, work_files, resource_files, transcoding_log_file(tests_dir, "reference"))
 
 
 def compute_metrics(task_def, tests_dir, image):
@@ -262,7 +279,7 @@ def compute_metrics(task_def, tests_dir, image):
         new_reference_path
     ]
     
-    run_ffmpeg_task(image, metrics_dir( tests_dir ), work_files, resource_files)
+    run_ffmpeg_task(image, metrics_dir( tests_dir ), work_files, resource_files, metrics_log_file(tests_dir))
 
 
 def compare_step(task_def, tests_dir):
