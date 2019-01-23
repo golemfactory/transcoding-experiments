@@ -1,0 +1,32 @@
+Building docker with ffmpeg:
+Previously ffmpeg was built from source, now is installed inside docker with `apt-get`
+
+Both images bases on golemfactory/base:1.3, currently used is golemfactory/ffmpeg:0.2
+1. Build regular ffmpeg image:
+    docker build -f ffmpeg_source.Dockerfile -t golemfactory/ffmpeg:0.1 .
+    docker build -f ffmpeg.Dockerfile -t golemfactory/ffmpeg:0.2 .
+
+Running ffmpeg docker outside golem
+1. Create "working-dir" same as working-dir-example
+2. Add streams to working-dir/mount/resources/
+3. Add files to working-dir/mount/work: 
+    - params.json
+    - task.py
+4. Modify params.json
+5. Execute ffmpeg task:
+    - ./task.sh golemfactory/ffmpeg:0.2 or
+    - docker run -it --rm --mount type=bind,source="$(pwd)"/working-dir/mount/work/,target=/golem/work/ --mount type=bind,source="$(pwd)"/working-dir/mount/output/,target=/golem/output/ --mount type=bind,source="$(pwd)"/working-dir/mount/resources/,target=/golem/resources/ golemfactory/ffmpeg:0.2 task.py
+6. You can also run shell in docker:
+    docker run -it --rm --entrypoint sh --mount type=bind,source="$(pwd)"/working-dir/mount/work/,target=/golem/work/ --mount type=bind,source="$(pwd)"/working-dir/mount/output/,target=/golem/output/ --mount type=bind,source="$(pwd)"/working-dir/mount/resources/,target=/golem/resources/ golemfactory/ffmpeg:0.2
+
+Pipeline and video comparison
+1. Add files to working-dir/mount/work:
+    - params_template.json //can do a refactor to remove usage of it
+2. Run:
+    - ./pipeline.sh
+3. TODOs:
+    - fix problem with splitting and merging(moves keyframes)
+    - prepare test data
+    - rewrite pipeline to python? do not know what is preferred
+    - move task.py to docker image
+    - read stream length from file instead requesting this value from user.
