@@ -18,6 +18,7 @@ RUN /golem/install_py_libs.sh 0 m3u8
 COPY ffmpeg-scripts/ /golem/scripts/
 
 ENV PYTHONPATH=/golem/scripts:/golem:$PYTHONPATH
+ENV TEMP=/golem/work/tmp/
 
 RUN ln -s /usr/bin/python3.6 /usr/bin/python3
 

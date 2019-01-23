@@ -2,11 +2,14 @@ import os
 import subprocess
 import shutil
 import re
+import tempfile
+
+
 
 FFMPEG_COMMAND = "ffmpeg"
 FFPROBE_COMMAND = "ffprobe"
 
-TMP_DIR = "/golem/work/tmp/"
+TMP_DIR = tempfile.gettempdir()
 
 
 def exec_cmd(cmd, file=None):
