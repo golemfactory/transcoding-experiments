@@ -52,6 +52,16 @@ def create_resolution_change_params(filepath, parts, resolution):
     params = create_basic_params(filepath, parts)
     params[ "output_stream" ] = os.path.join( "/golem/output/", os.path.basename( filepath ) )
     params[ "targs" ][ "resolution" ] = resolution
+    params[ "targs" ][ "scaling_alg" ] = "bicubic"
+
+    return params
+
+
+def create_bitrate_change_params(filepath, parts, bitrate):
+    
+    params = create_basic_params(filepath, parts)
+    params[ "output_stream" ] = os.path.join( "/golem/output/", os.path.basename( filepath ) )
+    params[ "targs" ][ "video" ][ "bitrate" ] = bitrate
 
     return params
 
