@@ -1,6 +1,10 @@
 import os
 
 
+DOCKER_IMAGE = "golemfactory/ffmpeg:0.2"
+
+
+
 def build_new_name(filepath, target_codec):
 
     name = os.path.basename( filepath )
@@ -18,20 +22,36 @@ def codec_to_encoder_name(target_codec):
     return encoders[ target_codec ]
 
 
-def create_codec_change_params(filepath, target_codec, parts):
+def create_basic_params(filepath, parts):
 
     params = dict()
     params[ "host_stream_path" ] = filepath
     params[ "path_to_stream" ] = os.path.join( "/golem/resources/", os.path.basename( filepath ) )
     params[ "parts" ] = parts
-    params[ "output_stream" ] = os.path.join( "/golem/output/", build_new_name( filepath, target_codec ) )
     params[ "targs" ] = dict()
     
     params[ "targs" ][ "audio" ] = dict()
-    params[ "targs" ][ "audio" ][ "codec" ] = "copy"
-
     params[ "targs" ][ "video" ] = dict()
+
+    return params
+
+
+def create_codec_change_params(filepath, target_codec, parts):
+
+    params = create_basic_params(filepath, parts)
+    params[ "output_stream" ] = os.path.join( "/golem/output/", build_new_name( filepath, target_codec ) )
+    
+    params[ "targs" ][ "audio" ][ "codec" ] = "copy"
     params[ "targs" ][ "video" ][ "codec" ] = codec_to_encoder_name(target_codec)
+
+    return params
+
+
+def create_resolution_change_params(filepath, parts, resolution):
+    
+    params = create_basic_params(filepath, parts)
+    params[ "output_stream" ] = os.path.join( "/golem/output/", os.path.basename( filepath ) )
+    params[ "targs" ][ "resolution" ] = resolution
 
     return params
 

@@ -8,8 +8,6 @@ import pipeline as pipeline
 import test_utils as utils
 
 
-DOCKER_IMAGE = "golemfactory/ffmpeg:0.2"
-
 
 def test_changing_codec(video, target_codec, parts):
 
@@ -18,7 +16,7 @@ def test_changing_codec(video, target_codec, parts):
     task_def = utils.create_codec_change_params( file_to_transcode, target_codec, parts )
     tests_dir = utils.build_test_directory_path( file_to_transcode, "change-codec" )
 
-    pipeline.run_pipeline(task_def, tests_dir, DOCKER_IMAGE)
+    pipeline.run_pipeline(task_def, tests_dir, utils.DOCKER_IMAGE)
     
     # This intentionally won't happen if tests fails. User can check content of test directory.
     pipeline.clean_step(tests_dir)  
