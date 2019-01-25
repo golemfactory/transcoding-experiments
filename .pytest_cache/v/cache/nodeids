@@ -1,0 +1,20 @@
+[
+  "tests/test_change_codec.py::test_changing_codec", 
+  "tests/test_change_codec.py::test_conversion_to_h264_video[tests/videos/different-codecs/big-bunny-[codec=flv1].flv-3]", 
+  "tests/test_change_codec.py::test_conversion_to_h264_video[tests/videos/different-codecs/big-buck-bunny-[codec=theora].ogv-3]", 
+  "tests/test_change_codec.py::test_conversion_to_h264_video[tests/videos/different-codecs/carphone_qcif-[codec=rawvideo].y4m-3]", 
+  "tests/test_change_codec.py::test_conversion_to_h264_video[tests/videos/different-codecs/Dance-[codec=mpeg2video].mpeg-3]", 
+  "tests/test_change_codec.py::test_conversion_to_h264_video[tests/videos/different-codecs/ForBiggerMeltdowns-[codec=mpeg4].mp4-3]", 
+  "tests/test_change_codec.py::test_conversion_to_h264_video[tests/videos/different-codecs/Panasonic-[codec=vp9].webm-3]", 
+  "tests/test_change_codec.py::test_conversion_to_h264_video[tests/videos/different-codecs/star_trails-[codec=wmv2].wmv-3]", 
+  "tests/test_change_codec.py::test_conversion_to_h264_video[tests/videos/different-codecs/TRA3106-[codec=h263].3gp-3]", 
+  "tests/test_scripts.py::test_get_video_len[tests/videos/different-codecs/big-buck-bunny-[codec=theora].ogv-60.708333]", 
+  "tests/test_scripts.py::test_get_video_len[tests/videos/different-codecs/big-bunny-[codec=flv1].flv-54.082]", 
+  "tests/test_scripts.py::test_get_video_len[tests/videos/different-codecs/carphone_qcif-[codec=rawvideo].y4m-12.746067]", 
+  "tests/test_scripts.py::test_get_video_len[tests/videos/different-codecs/Dance-[codec=mpeg2video].mpeg-30.196733]", 
+  "tests/test_scripts.py::test_get_video_len[tests/videos/different-codecs/ForBiggerBlazes-[codec=h264].mp4-15.021667]", 
+  "tests/test_scripts.py::test_get_video_len[tests/videos/different-codecs/ForBiggerMeltdowns-[codec=mpeg4].mp4-15.045]", 
+  "tests/test_scripts.py::test_get_video_len[tests/videos/different-codecs/Panasonic-[codec=vp9].webm-46.12]", 
+  "tests/test_scripts.py::test_get_video_len[tests/videos/different-codecs/star_trails-[codec=wmv2].wmv-21.292]", 
+  "tests/test_scripts.py::test_get_video_len[tests/videos/different-codecs/TRA3106-[codec=h263].3gp-16.984]"
+]

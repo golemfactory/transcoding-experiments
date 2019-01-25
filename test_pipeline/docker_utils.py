@@ -51,7 +51,7 @@ def create_environment(host_dir, mount_dirs, work_files, resource_files):
 
 
     ################################################
-    print("Coping files to /golem/work/:")
+    print("\nCoping files to /golem/work/:")
     print_list( work_files )
 
     work_dir = os.path.join( host_dir, "work" )
@@ -67,6 +67,8 @@ def create_environment(host_dir, mount_dirs, work_files, resource_files):
     for file in resource_files:
         destination = os.path.join( resources_dir, os.path.basename(file))
         shutil.copyfile(file, destination)
+
+    print("\n")
 
 
 def docker_mount_command(mount_dirs):

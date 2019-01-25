@@ -228,7 +228,7 @@ def compute_metrics(task_def, tests_dir, image):
     print("==================================================================")
     print("Computing metrics...")
 
-    reference_out_name = os.path.basename( task_def["output_stream"] )
+    reference_out_name = os.path.basename( task_def["path_to_stream"] )
     [ name, ext ] = os.path.splitext( reference_out_name )
     reference_out_name = name + "_TC" + ext
 

@@ -7,7 +7,7 @@ def build_new_name(filepath, target_codec):
     [ base, rest_with_ext ] = name.split("[")
     [ _, ext ] = rest_with_ext.split(".")
 
-    return base + "-[codec=" + target_codec + "]" + ext
+    return base + "[codec=" + target_codec + "]." + ext
 
 
 def codec_to_encoder_name(target_codec):
