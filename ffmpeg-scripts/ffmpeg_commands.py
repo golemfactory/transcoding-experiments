@@ -69,7 +69,6 @@ def split_video_command(input, output_list_file, segment_time):
            "-hls_time", "{}".format(segment_time),
            "-hls_list_size", "0",
            "-c", "copy",
-           "-copyts",
            "-mpegts_copyts", "1",
            output_list_file
            ]
@@ -167,8 +166,9 @@ def merge_videos(input_files, output):
 def merge_videos_command(input_file, output):
     cmd = [FFMPEG_COMMAND,
            "-i", input_file,
-           "-copyts",
-           "-c", "copy", output
+           "-c", "copy",
+           "-mpegts_copyts", "1",
+           output
            ]
 
     return cmd, input_file
@@ -223,7 +223,7 @@ def get_video_len(input_file):
     format_meta = metadata["format"]
 
     return float(format_meta["duration"])
-    
+
 
 def filter_metric(cmd, regex, log_file):
 
