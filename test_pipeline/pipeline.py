@@ -298,6 +298,15 @@ def compute_metrics(task_def, tests_dir, image):
     
     run_ffmpeg_task(image, metrics_dir( tests_dir ), work_files, resource_files, metrics_log_file(metrics_dir(tests_dir)))
 
+    check_if_output_files_exist(metrics_dir( tests_dir ), [
+        "video_metadata_output.txt",
+        "reference_metadata_output.txt",
+        "ssim_output.txt",
+        "ssim_log.txt",
+        "psnr_output.txt",
+        "psnr_log.txt"
+    ])
+
 
 def compare_step(task_def, tests_dir):
 
