@@ -48,26 +48,27 @@ def save_params(params, output):
 
 def create_save_split_params(task_def, params_dir):
     
-    params = dict( task_def )
+    params = dict()
     params[ "command" ] = "split"
-    del params[ "host_stream_path" ]        # Task definition for docker doesn't have this field.
+    params[ "path_to_stream" ] = task_def[ "path_to_stream" ]
+    params[ "parts" ] = task_def[ "parts" ]
 
     save_params( params, params_dir )
 
 
 def create_save_merge_params(task_def, params_dir):
 
-    params = dict( task_def )
+    params = dict()
     params[ "command" ] = "merge"
     params[ "use_playlist" ] = 0
-    del params[ "host_stream_path" ]        # Task definition for docker doesn't have this field.
+    params[ "output_stream" ] = task_def[ "output_stream" ]
 
     save_params( params, params_dir )
 
 
 def create_save_transcode_params(task_def, params_dir, track, use_playlist = True):
 
-    params = dict( task_def )
+    params = dict()
     params[ "command" ] = "transcode"
 
     if use_playlist:
@@ -76,7 +77,8 @@ def create_save_transcode_params(task_def, params_dir, track, use_playlist = Tru
         params[ "use_playlist" ] = 0
     
     params[ "track" ] = track
-    del params[ "host_stream_path" ]        # Task definition for docker doesn't have this field.
+    params[ "output_stream" ] = task_def[ "output_stream" ]
+    params[ "targs" ] = dict( task_def[ "targs" ] )
     
     save_params( params, params_dir )
 
@@ -103,6 +105,14 @@ def metrics_dir( tests_dir ):
 def clean_step(tests_dir):
     if os.path.exists( tests_dir ):
         shutil.rmtree(tests_dir)
+
+
+def check_if_output_files_exist(test_dir, files_list):
+
+    out_dir = os.path.join(test_dir, "output")
+    for file in files_list:
+        path = os.path.join(out_dir, file)
+        assert(os.path.exists(path))
 
 
 def run_ffmpeg_task(image, task_dir, work_files, resource_files, docker_log):
@@ -198,6 +208,8 @@ def merging_step(task_def, tests_dir, image):
     resource_files = collect_results(task_def, tests_dir)
 
     run_ffmpeg_task(image, merging_dir( tests_dir ), work_files, resource_files, merge_log_file(merging_dir(tests_dir)))
+
+    check_if_output_files_exist(merging_dir( tests_dir ), [os.path.basename(task_def[ "output_stream" ])])
 
 
 def transcode_reference(task_def, tests_dir, image):
