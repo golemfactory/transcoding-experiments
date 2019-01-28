@@ -23,6 +23,51 @@ def test_changing_codec(video, target_codec, parts):
 
 
 
+
+
+
+@pytest.mark.parametrize("videofile,num_parts", [
+    ("tests/videos/different-codecs/big-buck-bunny-[codec=theora].ogv", 3),
+    ("tests/videos/different-codecs/carphone_qcif-[codec=rawvideo].y4m", 3),
+    ("tests/videos/different-codecs/Dance-[codec=mpeg2video].mpeg", 3),
+    ("tests/videos/different-codecs/ForBiggerBlazes-[codec=h264].mp4", 3),
+    ("tests/videos/different-codecs/ForBiggerMeltdowns-[codec=mpeg4].mp4", 3),
+    ("tests/videos/different-codecs/Panasonic-[codec=vp9].webm", 3),
+    ("tests/videos/different-codecs/star_trails-[codec=wmv2].wmv", 3),
+    ("tests/videos/different-codecs/TRA3106-[codec=h263].3gp", 3),
+])
+def test_conversion_to_flv1_video(videofile, num_parts):
+    test_changing_codec( videofile, "flv1", num_parts )
+
+
+@pytest.mark.parametrize("videofile,num_parts", [
+    ("tests/videos/different-codecs/big-bunny-[codec=flv1].flv", 3),
+    ("tests/videos/different-codecs/carphone_qcif-[codec=rawvideo].y4m", 3),
+    ("tests/videos/different-codecs/Dance-[codec=mpeg2video].mpeg", 3),
+    ("tests/videos/different-codecs/ForBiggerBlazes-[codec=h264].mp4", 3),
+    ("tests/videos/different-codecs/ForBiggerMeltdowns-[codec=mpeg4].mp4", 3),
+    ("tests/videos/different-codecs/Panasonic-[codec=vp9].webm", 3),
+    ("tests/videos/different-codecs/star_trails-[codec=wmv2].wmv", 3),
+    ("tests/videos/different-codecs/TRA3106-[codec=h263].3gp", 3),
+])
+def test_conversion_to_theora_video(videofile, num_parts):
+    test_changing_codec( videofile, "theora", num_parts )
+
+
+@pytest.mark.parametrize("videofile,num_parts", [
+    ("tests/videos/different-codecs/big-buck-bunny-[codec=theora].ogv", 3),
+    ("tests/videos/different-codecs/big-bunny-[codec=flv1].flv", 3),
+    ("tests/videos/different-codecs/carphone_qcif-[codec=rawvideo].y4m", 3),
+    ("tests/videos/different-codecs/ForBiggerBlazes-[codec=h264].mp4", 3),
+    ("tests/videos/different-codecs/ForBiggerMeltdowns-[codec=mpeg4].mp4", 3),
+    ("tests/videos/different-codecs/Panasonic-[codec=vp9].webm", 3),
+    ("tests/videos/different-codecs/star_trails-[codec=wmv2].wmv", 3),
+    ("tests/videos/different-codecs/TRA3106-[codec=h263].3gp", 3),
+])
+def test_conversion_to_mpeg2video_video(videofile, num_parts):
+    test_changing_codec( videofile, "mpeg2video", num_parts )
+
+
 @pytest.mark.parametrize("videofile,num_parts", [
     ("tests/videos/different-codecs/big-bunny-[codec=flv1].flv", 3),
     ("tests/videos/different-codecs/big-buck-bunny-[codec=theora].ogv", 3),
@@ -36,3 +81,58 @@ def test_changing_codec(video, target_codec, parts):
 def test_conversion_to_h264_video(videofile, num_parts):
     test_changing_codec( videofile, "h264", num_parts )
 
+
+@pytest.mark.parametrize("videofile,num_parts", [
+    ("tests/videos/different-codecs/big-buck-bunny-[codec=theora].ogv", 3),
+    ("tests/videos/different-codecs/big-bunny-[codec=flv1].flv", 3),
+    ("tests/videos/different-codecs/carphone_qcif-[codec=rawvideo].y4m", 3),
+    ("tests/videos/different-codecs/Dance-[codec=mpeg2video].mpeg", 3),
+    ("tests/videos/different-codecs/ForBiggerBlazes-[codec=h264].mp4", 3),
+    ("tests/videos/different-codecs/Panasonic-[codec=vp9].webm", 3),
+    ("tests/videos/different-codecs/star_trails-[codec=wmv2].wmv", 3),
+    ("tests/videos/different-codecs/TRA3106-[codec=h263].3gp", 3),
+])
+def test_conversion_to_mpeg4_video(videofile, num_parts):
+    test_changing_codec( videofile, "mpeg4", num_parts )
+
+
+@pytest.mark.parametrize("videofile,num_parts", [
+    ("tests/videos/different-codecs/big-buck-bunny-[codec=theora].ogv", 3),
+    ("tests/videos/different-codecs/big-bunny-[codec=flv1].flv", 3),
+    ("tests/videos/different-codecs/carphone_qcif-[codec=rawvideo].y4m", 3),
+    ("tests/videos/different-codecs/Dance-[codec=mpeg2video].mpeg", 3),
+    ("tests/videos/different-codecs/ForBiggerBlazes-[codec=h264].mp4", 3),
+    ("tests/videos/different-codecs/ForBiggerMeltdowns-[codec=mpeg4].mp4", 3),
+    ("tests/videos/different-codecs/star_trails-[codec=wmv2].wmv", 3),
+    ("tests/videos/different-codecs/TRA3106-[codec=h263].3gp", 3),
+])
+def test_conversion_to_vp9_video(videofile, num_parts):
+    test_changing_codec( videofile, "vp9", num_parts )
+
+
+@pytest.mark.parametrize("videofile,num_parts", [
+    ("tests/videos/different-codecs/big-buck-bunny-[codec=theora].ogv", 3),
+    ("tests/videos/different-codecs/big-bunny-[codec=flv1].flv", 3),
+    ("tests/videos/different-codecs/carphone_qcif-[codec=rawvideo].y4m", 3),
+    ("tests/videos/different-codecs/Dance-[codec=mpeg2video].mpeg", 3),
+    ("tests/videos/different-codecs/ForBiggerBlazes-[codec=h264].mp4", 3),
+    ("tests/videos/different-codecs/ForBiggerMeltdowns-[codec=mpeg4].mp4", 3),
+    ("tests/videos/different-codecs/Panasonic-[codec=vp9].webm", 3),
+    ("tests/videos/different-codecs/TRA3106-[codec=h263].3gp", 3),
+])
+def test_conversion_to_wmv2_video(videofile, num_parts):
+    test_changing_codec( videofile, "wmv2", num_parts )
+
+
+@pytest.mark.parametrize("videofile,num_parts", [
+    ("tests/videos/different-codecs/big-buck-bunny-[codec=theora].ogv", 3),
+    ("tests/videos/different-codecs/big-bunny-[codec=flv1].flv", 3),
+    ("tests/videos/different-codecs/carphone_qcif-[codec=rawvideo].y4m", 3),
+    ("tests/videos/different-codecs/Dance-[codec=mpeg2video].mpeg", 3),
+    ("tests/videos/different-codecs/ForBiggerBlazes-[codec=h264].mp4", 3),
+    ("tests/videos/different-codecs/ForBiggerMeltdowns-[codec=mpeg4].mp4", 3),
+    ("tests/videos/different-codecs/Panasonic-[codec=vp9].webm", 3),
+    ("tests/videos/different-codecs/star_trails-[codec=wmv2].wmv", 3),
+])
+def test_conversion_to_h263_video(videofile, num_parts):
+    test_changing_codec( videofile, "h263", num_parts )

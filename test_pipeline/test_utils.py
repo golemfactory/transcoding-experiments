@@ -18,7 +18,14 @@ def codec_to_encoder_name(target_codec):
 
     encoders = dict()
     encoders[ "h264" ] = "libx264"
-
+    encoders[ "flv1" ] = "flv"
+    encoders[ "theora" ] = "libtheora"
+    encoders[ "mpeg2video" ] = "mpeg2video"
+    encoders[ "mpeg4" ] = "mpeg4"
+    encoders[ "vp9" ] = "libvpx-vp9"
+    encoders[ "wmv2" ] = "wmv2"                 # This could not work. There were no encoder in codecs list.
+    encoders[ "h263" ] = "h263"
+    
     return encoders[ target_codec ]
 
 
