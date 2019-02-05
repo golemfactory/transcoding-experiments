@@ -6,8 +6,8 @@ import tempfile
 import json
 
 
-FFMPEG_COMMAND = "ffmpeg"
-FFPROBE_COMMAND = "ffprobe"
+FFMPEG_COMMAND = "/usr/bin/ffmpeg"
+FFPROBE_COMMAND = "/usr/bin/ffprobe"
 
 TMP_DIR = tempfile.gettempdir()
 
@@ -113,7 +113,7 @@ def transcode_video_command(track, output_playlist_name, targs, use_playlist):
     except:
         pass
     try:
-        fps = targs['frame_rate']
+        fps = str(targs['frame_rate'])
         cmd.append("-r")
         cmd.append(fps)
     except:
