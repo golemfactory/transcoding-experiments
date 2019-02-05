@@ -17,6 +17,39 @@ TRANSCODING_LOG = "transcoding.log"
 METRICS_LOG = "metrics-generation.log"
 
 
+import time
+
+
+time_meassurments = dict()
+
+def start_meassure_time(name):
+
+    global time_meassurments
+
+    start_time = time.time()
+    time_meassurments[ name ] = start_time
+
+
+def end_meassure_time(name):
+
+    global time_meassurments
+    
+    start_time = time_meassurments[ name ]
+    end_time = time.time()
+
+    time_meassurments[ name ] = end_time - start_time
+
+
+def print_meassurments():
+
+    print("==================================================================")
+    print( "Transcoding performance:" )
+    for name, time in time_meassurments.items():
+        print( "{0: <40} - {1}".format( name, time ) )
+
+    print("==================================================================")
+
+
 def split_log_file(tests_dir):
     return os.path.join(tests_dir, SPLIT_LOG)
 
@@ -131,6 +164,8 @@ def split_video(task_def, tests_dir, image):
     print("==================================================================")
     print("Splitting...")
 
+    start_meassure_time( "Splitting" )
+
     tests_dir = os.path.join( tests_dir, "split" )
 
     # Create split command
@@ -147,11 +182,15 @@ def split_video(task_def, tests_dir, image):
 
     run_ffmpeg_task(image, tests_dir, work_files, resource_files, split_log_file(tests_dir))
 
+    end_meassure_time( "Splitting" )
+
 
 def transcoding_step(task_def, tests_dir, image):
 
     print("==================================================================")
     print("Transcoding...")
+
+    start_meassure_time( "Transcoding" )
 
     subtasks_file = os.path.join( splitting_dir( tests_dir ), "output/split-results.json" )
     subtasks = load_params( subtasks_file )
@@ -179,6 +218,8 @@ def transcoding_step(task_def, tests_dir, image):
         
         run_ffmpeg_task(image, subtask_dir, work_files, resource_files, transcoding_log_file(tests_dir, subtask_num))
 
+    end_meassure_time( "Transcoding" )    
+
 
 def collect_results(task_def, tests_dir):
 
@@ -197,6 +238,8 @@ def merging_step(task_def, tests_dir, image):
     print("==================================================================")
     print("Merging...")
 
+    start_meassure_time( "Merging" )
+
     # Create metge command
     create_save_merge_params(task_def, PARAMS_TMP)
 
@@ -211,12 +254,17 @@ def merging_step(task_def, tests_dir, image):
 
     check_if_output_files_exist(merging_dir( tests_dir ), [os.path.basename(task_def[ "output_stream" ])])
 
+    end_meassure_time( "Merging" )
+
 
 def transcode_reference(task_def, tests_dir, image):
 
     print("==================================================================")
     print("Transcoding reference video...")
     
+    start_meassure_time( "Reference" )
+
+
     # Update params for this subtask
     track = os.path.join( "/golem/resources/", os.path.basename( task_def[ "path_to_stream" ] ) )
     create_save_transcode_params(task_def, PARAMS_TMP, track, False)
@@ -234,11 +282,15 @@ def transcode_reference(task_def, tests_dir, image):
     
     run_ffmpeg_task(image, subtask_dir, work_files, resource_files, transcoding_log_file(tests_dir, "reference"))
 
+    end_meassure_time( "Reference" )
+
 
 def compute_metrics(task_def, tests_dir, image):
 
     print("==================================================================")
     print("Computing metrics...")
+
+    start_meassure_time( "Metrics" )
 
     reference_out_name = os.path.basename( task_def["path_to_stream"] )
     [ name, ext ] = os.path.splitext( reference_out_name )
@@ -307,6 +359,8 @@ def compute_metrics(task_def, tests_dir, image):
         "psnr_log.txt"
     ])
 
+    end_meassure_time( "Metrics" )
+
 
 def compare_step(task_def, tests_dir):
 
@@ -335,6 +389,8 @@ def run_pipeline(task_def, tests_dir, image):
     transcode_reference(task_def, tests_dir, image)
 
     compute_metrics(task_def, tests_dir, image)
+    print_meassurments()
+
     success = compare_step(task_def, tests_dir)
 
     assert(success)
