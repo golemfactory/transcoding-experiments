@@ -106,14 +106,14 @@ def transcode_video_command(track, output_playlist_name, targs, use_playlist):
         cmd.extend(playlist_cmd)
 
     # video settings
+    cmd.append("-c:v")
     try:
         codec = targs['video']['codec']
-        cmd.append("-c:v")
         cmd.append(codec)
     except:
-        pass
+        cmd.append("copy")
     try:
-        fps = str(targs['frame_rate'])
+        fps = targs['frame_rate']
         cmd.append("-r")
         cmd.append(fps)
     except:
@@ -125,12 +125,12 @@ def transcode_video_command(track, output_playlist_name, targs, use_playlist):
     except:
         pass
     # audio settings
+    cmd.append("-c:a")
     try:
         acodec = targs['audio']['codec']
-        cmd.append("-c:a")
         cmd.append(acodec)
     except:
-        pass
+        cmd.append("copy")
     try:
         abitrate = targs['audio']['bitrate']
         cmd.append("-c:a")
@@ -158,9 +158,6 @@ def transcode_video_command(track, output_playlist_name, targs, use_playlist):
 def merge_videos(input_files, output):
     cmd, list_file = merge_videos_command(input_files, output)
     exec_cmd(cmd)
-
-    # remove temporary file with merge list
-    os.remove(list_file)
 
 
 def merge_videos_command(input_file, output):

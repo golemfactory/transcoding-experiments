@@ -1,10 +1,10 @@
 import sys
+
 sys.path.append("ffmpeg-scripts/")
 
 import pytest
 
 import ffmpeg_commands as ffmpeg
-
 
 
 @pytest.mark.parametrize("videofile,expected_length", [
@@ -19,5 +19,4 @@ import ffmpeg_commands as ffmpeg
     ("tests/videos/different-codecs/TRA3106-[codec=h263].3gp", 16.9840)
 ])
 def test_get_video_len(videofile, expected_length):
-    assert(ffmpeg.get_video_len(videofile) == expected_length)
-
+    assert (ffmpeg.get_video_len(videofile) == expected_length)
