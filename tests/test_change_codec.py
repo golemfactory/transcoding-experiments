@@ -14,7 +14,7 @@ def test_changing_codec(video, target_codec, parts):
     file_to_transcode = video
 
     task_def = utils.create_codec_change_params( file_to_transcode, target_codec, parts )
-    tests_dir = utils.build_test_directory_path( file_to_transcode, "change-codec" )
+    tests_dir = utils.build_test_directory_path( file_to_transcode, "change-codec/" + target_codec )
 
     pipeline.run_pipeline(task_def, tests_dir, utils.DOCKER_IMAGE)
     

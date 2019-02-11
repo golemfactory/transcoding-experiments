@@ -45,7 +45,7 @@ def print_meassurments():
     print("==================================================================")
     print( "Transcoding performance:" )
     for name, time in time_meassurments.items():
-        print( "{0: <40} - {1}".format( name, time ) )
+        print( "{0: <40} {1}".format( name, time ) )
 
     print("==================================================================")
 
@@ -398,7 +398,7 @@ def run_pipeline(task_def, tests_dir, image):
 
 def run():
 
-    PARAMS="working-dir/mount/work/params.json"
+    PARAMS="working-dir/mount/work/ToS-params.json"
 
     task_def = load_params(PARAMS)
     tests_dir = os.path.join( os.getcwd(), "working-dir/test/" )

@@ -1,9 +1,8 @@
 {
     "command": "transcode",
-    "path_to_stream": "/golem/resources/Jellyfish.mp4",
-    "video_length": 100,
-    "parts": 10,
-    "track": "/golem/resources/Jellyfish.mp4",
+    "path_to_stream": "/golem/resources/gada.mp4",
+    "parts": 20,
+    "track": "/golem/resources/gada.mp4",
     "use_playlist": "0",
     "targs": {
         "video": {
@@ -20,5 +19,5 @@
         ],
         "scaling_alg": "bicubic"
     },
-    "output_stream": "/golem/output/output.mp4"
+    "output_stream": "/golem/output/gada.mp4"
 }
