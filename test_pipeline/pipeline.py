@@ -383,12 +383,7 @@ def run_pipeline(task_def, tests_dir, image):
 
 
 def run():
-<<<<<<< HEAD
-
-    PARAMS="working-dir/mount/work/ToS-params.json"
-=======
     PARAMS = "working-dir/mount/work/params.json"
->>>>>>> f0193ea4b34278351ebe35bcad07333ee296bfe5
 
     task_def = load_params(PARAMS)
     tests_dir = os.path.join(os.getcwd(), "working-dir/test/")
