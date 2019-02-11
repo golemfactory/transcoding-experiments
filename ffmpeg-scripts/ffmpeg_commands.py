@@ -1,10 +1,8 @@
-import os
-import subprocess
-import shutil
-import re
-import tempfile
 import json
-
+import os
+import re
+import subprocess
+import tempfile
 
 FFMPEG_COMMAND = "/usr/bin/ffmpeg"
 FFPROBE_COMMAND = "/usr/bin/ffprobe"
@@ -113,7 +111,7 @@ def transcode_video_command(track, output_playlist_name, targs, use_playlist):
     except:
         cmd.append("copy")
     try:
-        fps = targs['frame_rate']
+        fps = str(targs['frame_rate'])
         cmd.append("-r")
         cmd.append(fps)
     except:
