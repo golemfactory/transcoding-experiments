@@ -40,11 +40,7 @@ def print_meassurments():
     print("==================================================================")
     print("Transcoding performance:")
     for name, time in time_meassurments.items():
-<<<<<<< HEAD
         print( "{0: <40} {1}".format( name, time ) )
-=======
-        print("{0: <40} - {1}".format(name, time))
->>>>>>> f0193ea4b34278351ebe35bcad07333ee296bfe5
 
     print("==================================================================")
 
