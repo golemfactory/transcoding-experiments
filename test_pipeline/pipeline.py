@@ -85,11 +85,12 @@ def create_save_split_params(task_def, params_dir):
     save_params(params, params_dir)
 
 
-def create_save_merge_params(task_def, params_dir):
+def create_save_merge_params(task_def, params_dir, files_to_merge):
     params = dict()
     params["command"] = "merge"
-    params["use_playlist"] = 0
+    params["use_playlist"] = False
     params["output_stream"] = task_def["output_stream"]
+    params["chunks"] = files_to_merge
 
     save_params(params, params_dir)
 
@@ -99,13 +100,17 @@ def create_save_transcode_params(task_def, params_dir, track, use_playlist=True)
     params["command"] = "transcode"
 
     if use_playlist:
-        params["use_playlist"] = 1
+        params["use_playlist"] = True
     else:
-        params["use_playlist"] = 0
+        params["use_playlist"] = False
 
     params["track"] = track
-    params["output_stream"] = task_def["output_stream"]
     params["targs"] = dict(task_def["targs"])
+
+    filename, ext = os.path.splitext(os.path.basename(track))
+    output_stream = os.path.join("/golem/output/", filename + '_TC' + ext)
+
+    params["output_stream"] = output_stream
 
     save_params(params, params_dir)
 
@@ -227,15 +232,16 @@ def merging_step(task_def, tests_dir, image):
 
     start_meassure_time("Merging")
 
+    resource_files = collect_results(task_def, tests_dir)
+    files_to_merge = [ os.path.basename( file ) for file in resource_files ]
+
     # Create metge command
-    create_save_merge_params(task_def, PARAMS_TMP)
+    create_save_merge_params(task_def, PARAMS_TMP, files_to_merge)
 
     # Prepare files that should be copied to docker environment (mounted directories).
     work_files = [
         PARAMS_TMP
     ]
-
-    resource_files = collect_results(task_def, tests_dir)
 
     run_ffmpeg_task(image, merging_dir(tests_dir), work_files, resource_files, merge_log_file(merging_dir(tests_dir)))
 

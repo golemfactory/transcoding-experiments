@@ -3,7 +3,7 @@ import subprocess
 import sys
 import re
 
-BITRATE_TOLARANCE = 1000
+BITRATE_TOLARANCE = 5000
 PSNR_THRESHOLD = 70
 SSIM_THRESHOLD = 0.98
 
