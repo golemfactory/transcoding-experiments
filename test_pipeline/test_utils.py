@@ -1,6 +1,6 @@
 import os
 
-DOCKER_IMAGE = "golemfactory/ffmpeg:0.2"
+DOCKER_IMAGE = "golemfactory/ffmpeg:1.0"
 
 
 def build_new_name(filepath, target_codec):
