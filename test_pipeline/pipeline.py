@@ -354,13 +354,14 @@ def compare_step(task_def, tests_dir):
     psnr_log = os.path.join(results_dir, "psnr_log.txt")
     ssim_log = os.path.join(results_dir, "ssim_log.txt")
 
-    success = True
+    metrics_success = True
+    metadata_success = True
 
-    success = compare_video.compare_psnr(psnr_log) and success
-    success = compare_video.compare_ssim(ssim_log) and success
-    success = compare_video.compare_metadata(video_meta_path, reference_meta_path) and success
+    metrics_success = compare_video.compare_psnr(psnr_log) and metrics_success
+    metrics_success = compare_video.compare_ssim(ssim_log) and metrics_success
+    metadata_success = compare_video.compare_metadata(video_meta_path, reference_meta_path) and metadata_success
 
-    return success
+    return metrics_success, metadata_success
 
 
 def run_pipeline(task_def, tests_dir, image):
@@ -373,9 +374,10 @@ def run_pipeline(task_def, tests_dir, image):
     compute_metrics(task_def, tests_dir, image)
     print_meassurments()
 
-    success = compare_step(task_def, tests_dir)
+    metrics_success, metadata_success = compare_step(task_def, tests_dir)
 
-    assert (success)
+    assert(metadata_success)
+    assert(metrics_success)
 
 
 def run():
