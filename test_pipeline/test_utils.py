@@ -22,6 +22,9 @@ def codec_to_encoder_name(target_codec):
     encoders["vp9"] = "libvpx-vp9"
     encoders["wmv2"] = "wmv2"  # This could not work. There were no encoder in codecs list.
     encoders["h263"] = "h263"
+    encoders["h265"] = "libx265"
+    encoders["HEVC"] = "libx265"    # Alias for h265
+    encoders["av1"] = "libaom-av1"
 
     return encoders[target_codec]
 
