@@ -21,9 +21,25 @@ Usage:
 Uses `ffprobe -show_frames` to get a list of frame types in the video and prints them all as a sequence.
 Also prints counts for each type.
 
+#### show-ssim-and-psnr.sh
+``` bash
+./show-ssim-and-psnr.sh <video_file1> <video_file2>
+```
+
+Uses `ffmpeg` to calculate SSIM and PSNR between all the frame pairs in to video files.
+
+#### visual-video-diff.sh
+``` bash
+./visual-video-diff.sh <video_file1> <video_file2>
+```
+
+Uses `ffplay` to play a video showing the difference between two video files.
+
 #### Examples
 ``` bash
 ./split-transcode-merge-with-ffmpeg-segment.sh Beach.mp4 beach-split 12
 ./show-frame-types.sh beach-split/Beach-transcoded.mp4
 ./show-frame-types.sh beach-split/Beach-merged-transcoded.mp4
+./show-ssim-and-psnr.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4
+./visual-video-diff.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4
 ```
