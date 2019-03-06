@@ -35,6 +35,18 @@ Uses `ffmpeg` to calculate SSIM and PSNR between all the frame pairs in to video
 
 Uses `ffplay` to play a video showing the difference between two video files.
 
+#### dump-frame-diff.sh
+``` bash
+./dump-frame-diff.sh <reference_file> <new_file> <output_dir> <duration>
+```
+
+Accepts two files as arguments: the reference file we're comparing to and a new file that might differ from it.
+The script extracts individual frames from both videos into two sequences of PNG images.
+Then it also uses `ffmpeg` to compute the difference between the frames in the two videos and extract those differences as another PNG sequence.
+
+The output is stored in subdirectories of `<output_dir>`.
+Since the full PNG images are big and there are a lot of them, the `<duration>` argument specifies the duration (in seconds) of the initial part of the video that should be processed.
+
 #### Examples
 ``` bash
 ./split-transcode-merge-with-ffmpeg-segment.sh Beach.mp4 beach-split 12
@@ -42,4 +54,5 @@ Uses `ffplay` to play a video showing the difference between two video files.
 ./show-frame-types.sh beach-split/Beach-merged-transcoded.mp4
 ./show-ssim-and-psnr.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4
 ./visual-video-diff.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4
+./dump-frame-diff.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4 beach-split/diff 10
 ```
