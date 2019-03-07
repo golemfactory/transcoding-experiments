@@ -19,7 +19,7 @@ function ffmpeg_segment {
         -segment_start_number 1                              \
         -segment_list         "$segment_list_file"           \
         -segment_list_type    flat                           \
-        "$segment_name_pattern" 2> "$(strip_extension "$input_file")-ffmpeg-segment.log"
+        "$segment_name_pattern"
 }
 
 
@@ -32,11 +32,12 @@ function ffmpeg_concat {
     ffmpeg                                  \
         -nostdin                            \
         -hide_banner                        \
+        -v    error                         \
         -f    concat                        \
         -safe 0                             \
         -i    "$ffconcat_segment_list_file" \
         -c    copy                          \
-        "$output_file" 2> "$(strip_extension "$output_file")-ffmpeg-concat.log"
+        "$output_file"
 }
 
 
