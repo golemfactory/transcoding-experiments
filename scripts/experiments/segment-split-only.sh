@@ -12,3 +12,5 @@ experiment_dir="$output_dir/$experiment_name/$(basename "$video_file")"
 init_experiment_dir       "$experiment_dir" "$video_file"
 split_input               "$experiment_dir" "split_with_ffmpeg_segment $num_segments"
 merge_segments            "$experiment_dir" "merge_with_ffmpeg_concat"
+
+dump_frame_types_for_experiment "$experiment_dir"
