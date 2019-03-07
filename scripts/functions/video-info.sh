@@ -103,3 +103,17 @@ function unique_frame_types {
          tr -d '\n'
      )"
 }
+
+
+function dump_frame_types_for_video {
+    local video_file="$1"
+
+    printf "%s" "$(frame_types "$video_file")" > "$(strip_extension "$video_file")-frame-types.txt"
+}
+
+
+function load_frame_types_for_video {
+    local video_file="$1"
+
+    cat "$(strip_extension "$video_file")-frame-types.txt"
+}

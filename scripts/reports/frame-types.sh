@@ -42,7 +42,7 @@ function frame_types_from_all_segments_side_by_side {
     segment_frame_types=""
     for segment_basename in $(cat "$segment_dir/segments.txt"); do
         segment_file="$segment_dir/$segment_basename"
-        segment_frame_types="$segment_frame_types$(frame_types "$segment_file")"
+        segment_frame_types="$segment_frame_types$(load_frame_types_for_video "$video_file")"
     done
 
     printf "%s" "$segment_frame_types"
@@ -57,9 +57,9 @@ function frame_types_merge_split_report_row {
     local output_format="$(get_extension "$video_file")"
     local merged_file="$experiment_dir/merged.$output_format"
 
-    local input_frames="$(frame_types "$video_file")"
+    local input_frames="$(load_frame_types_for_video "$video_file")"
     local segment_frames="$(frame_types_from_all_segments_side_by_side "$experiment_dir/split/")"
-    local merged_frames="$(frame_types "$merged_file")"
+    local merged_frames="$(load_frame_types_for_video "$merged_file")"
 
     local input_frame_count="$(  count_frames "$input_frames")"
     local segment_frame_count="$(count_frames "$segment_frames")"
@@ -141,9 +141,9 @@ function frame_types_transcode_merge_report_row {
     local output_file="$experiment_dir/monolithic.$output_format"
     local merged_file="$experiment_dir/merged.$output_format"
 
-    local input_frames="$(frame_types "$video_file")"
-    local output_frames="$(frame_types "$output_file")"
-    local merged_frames="$(frame_types "$merged_file")"
+    local input_frames="$(load_frame_types_for_video "$video_file")"
+    local output_frames="$(load_frame_types_for_video "$output_file")"
+    local merged_frames="$(load_frame_types_for_video "$merged_file")"
 
     local input_frame_count="$(  count_frames "$input_frames")"
     local output_frame_count="$(count_frames "$output_frames")"

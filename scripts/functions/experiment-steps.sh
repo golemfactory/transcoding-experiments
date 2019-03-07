@@ -92,3 +92,31 @@ function transcode_segments {
             "$output_file"
     done
 }
+
+
+function dump_frame_types_for_experiment {
+    local experiment_dir="$1"
+
+    echo "Generating frame-type.txt files for $experiment_dir/"
+
+    local input_file="$experiment_dir/input.$(cat "$experiment_dir/input-format")"
+    local output_file="$experiment_dir/monolithic.$(cat "$experiment_dir/output-format")"
+    local merged_file="$experiment_dir/merged.$(cat "$experiment_dir/output-format")"
+
+    dump_frame_types_for_video "$input_file"
+    dump_frame_types_for_video "$merged_file"
+
+    if [ -e "$output_file" ]; then
+        dump_frame_types_for_video "$output_file"
+    fi
+
+    for segment_file in $(cat "$experiment_dir/split/segments.txt"); do
+        dump_frame_types_for_video "$experiment_dir/split/$segment_file"
+    done
+
+    if [ -e "$output_file" ]; then
+        for segment_file in $(cat "$experiment_dir/transcode/segments.txt"); do
+            dump_frame_types_for_video "$experiment_dir/transcode/$segment_file"
+        done
+    fi
+}

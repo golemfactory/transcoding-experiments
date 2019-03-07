@@ -14,3 +14,5 @@ split_input               "$experiment_dir" "split_with_ffmpeg_segment $num_segm
 transcode_input           "$experiment_dir" "ffmpeg_scale 0.5"
 transcode_segments        "$experiment_dir" "ffmpeg_scale 0.5"
 merge_transcoded_segments "$experiment_dir" "merge_with_ffmpeg_concat"
+
+dump_frame_types_for_experiment "$experiment_dir"
