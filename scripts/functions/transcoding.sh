@@ -8,9 +8,10 @@ function ffmpeg_scale {
     ffmpeg                                                \
         -nostdin                                          \
         -hide_banner                                      \
+        -v  error                                         \
         -i  "$input_file"                                 \
         -vf "scale=iw*$scaling_factor:ih*$scaling_factor" \
-        "$output_file" 2> "$(strip_extension "$output_file")-ffmpeg-scale.log"
+        "$output_file"
 }
 
 
@@ -24,7 +25,8 @@ function ffmpeg_transcode_with_codec {
     ffmpeg                                                \
         -nostdin                                          \
         -hide_banner                                      \
+        -v  error                                         \
         -i  "$input_file"                                 \
         -vcodec "$output_codec"                           \
-        "$output_file" 2> "$(strip_extension "$output_file")-ffmpeg-change-format.log"
+        "$output_file"
 }
