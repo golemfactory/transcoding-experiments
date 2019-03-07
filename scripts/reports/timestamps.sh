@@ -50,6 +50,9 @@ function timestamps_transcode_merge_report {
 
     timestamps_transcode_merge_report_header
     for video_file in $video_files; do
-        timestamps_transcode_merge_report_row "$output_format" "$video_file" "$experiment_set_dir/$(basename $video_file)"
+        experiment_dir="$experiment_set_dir/$(basename $video_file)"
+        input_format="$(get_extension "$video_file")"
+        input_file="$experiment_dir/input.$input_format"
+        timestamps_transcode_merge_report_row "$output_format" "$input_file" "$experiment_dir"
     done
 }
