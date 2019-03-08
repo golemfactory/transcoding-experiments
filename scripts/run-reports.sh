@@ -8,6 +8,7 @@ columns=(
     input_video_name
     input_num_streams
     input_video_format
+    input_video_codec
     input_duration_rounded
 )
 print_report output/segment-split-only ${columns[@]}

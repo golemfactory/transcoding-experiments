@@ -29,6 +29,22 @@ function column_input_num_streams_value {
 }
 
 
+# CODEC
+
+declare -A column_input_video_codec
+column_input_video_codec[header]="codec"
+column_input_video_codec[length]=10
+column_input_video_codec[format]=%-${column_input_video_codec[length]}s
+
+
+function column_input_video_codec_value {
+    local experiment_dir="$1"
+
+    local input_file="$experiment_dir/input.$(cat "$experiment_dir/input-format")"
+    ffprobe_get_stream_attribute "$input_file" v:0 codec_name
+}
+
+
 # FORMAT
 
 declare -A column_input_video_format
