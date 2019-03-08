@@ -23,11 +23,11 @@ function ffmpeg_segment {
 }
 
 
-function ffmpeg_concat {
+function ffmpeg_concat_demuxer {
     local ffconcat_segment_list_file="$1"
     local output_file="$2"
 
-    echo "ffmpeg_concat: output=$output_file"
+    echo "ffmpeg_concat_demuxer: output=$output_file"
 
     ffmpeg                                  \
         -nostdin                            \
@@ -85,15 +85,15 @@ function split_with_ffmpeg_segment {
 }
 
 
-function merge_with_ffmpeg_concat {
+function merge_with_ffmpeg_concat_demuxer {
     local input_dir="$1"
     local output_dir="$2"
     local output_file_extension="$3"
 
-    echo "Merging segments with ffmpeg concat"
+    echo "Merging segments with ffmpeg concat demuxer"
 
     mkdir --parents "$output_dir"
 
     flat_file_list_to_ffconcat_list "$input_dir/segments.txt" "$input_dir/segments.ffconcat"
-    ffmpeg_concat "$input_dir/segments.ffconcat" "$output_dir/merged.$output_file_extension"
+    ffmpeg_concat_demuxer "$input_dir/segments.ffconcat" "$output_dir/merged.$output_file_extension"
 }
