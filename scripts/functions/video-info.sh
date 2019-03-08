@@ -62,12 +62,8 @@ function approximate_segment_length {
 function frame_types {
     local input_file="$1"
 
-    printf "%s" "$(
-        ffprobe -show_frames "$input_file" 2> /dev/null |
-        grep "pict_type="                               |
-        sed 's/pict_type=\(.*\)$/\1/'                   |
-        tr -d '\n'
-    )"
+    # NOTE: printf strips newlines and puts all characters on a single line. That's intentional.
+    printf "%s" "$(ffprobe_show_entries "$input_file" frame=pict_type)"
 }
 
 
