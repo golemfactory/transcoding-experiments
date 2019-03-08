@@ -16,12 +16,13 @@ function run_experiment {
     echo
 }
 
-for video_file in $video_files; do
-    run_experiment segment-split-only        "$video_file"
-done
-for video_file in $video_files; do
-    run_experiment segment-split-half-scale  "$video_file"
-done
-for video_file in $video_files; do
-    run_experiment segment-split-vp9-convert "$video_file"
+experiments=(
+    segment-split-only
+    segment-split-half-scale
+    segment-split-vp9-convert
+)
+for experiment in ${experiments[@]}; do
+    for video_file in $video_files; do
+        run_experiment $experiment "$video_file"
+    done
 done
