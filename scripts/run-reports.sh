@@ -16,12 +16,20 @@ echo "Timestamp report for segment-split-vp9-convert"
 print_report "$output_dir/segment-split-vp9-convert" ${report_timestamps_transcode_merge_columns[@]}
 echo
 
+echo "Timestamp report for segment-split-concat-protocol-merge-half-scale"
+print_report "$output_dir/segment-split-concat-protocol-merge-half-scale" ${report_timestamps_transcode_merge_columns[@]}
+echo
+
 echo "Frame type report for segment-split-half-scale"
 print_report "$output_dir/segment-split-half-scale" ${report_frame_types_with_transcoding_columns[@]}
 echo
 
 echo "Frame type report for segment-split-vp9-convert"
 print_report "$output_dir/segment-split-vp9-convert" ${report_frame_types_with_transcoding_columns[@]}
+echo
+
+echo "Frame type report for segment-split-concat-protocol-merge-half-scale"
+print_report "$output_dir/segment-split-concat-protocol-merge-half-scale" ${report_frame_types_with_transcoding_columns[@]}
 echo
 
 echo "Frame type report for segment-split-only"

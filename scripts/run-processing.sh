@@ -23,6 +23,7 @@ experiments=(
     segment-split-only
     segment-split-half-scale
     segment-split-vp9-convert
+    segment-split-concat-protocol-merge-half-scale
 )
 for experiment in ${experiments[@]}; do
     for video_file in $video_files; do
