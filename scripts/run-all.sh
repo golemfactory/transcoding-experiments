@@ -8,4 +8,4 @@ fi
 video_files="$(find input/ -mindepth 1 -maxdepth 1)"
 
 ./run-processing.sh 5 $video_files
-./run-reports.sh
+./run-reports.sh output

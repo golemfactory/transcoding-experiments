@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
 source functions/all.sh
-source reports/all.sh
+
+output_dir="$1"
 
 echo "General info report"
 columns=(
@@ -11,7 +12,7 @@ columns=(
     input_video_codec
     input_duration_rounded
 )
-print_report output/segment-split-only ${columns[@]}
+print_report "$output_dir/segment-split-only" ${columns[@]}
 echo
 
 echo "Timestamp report for segment-split-half-scale"
@@ -27,11 +28,11 @@ timestamps_transcode_merge_columns=(
     output_audio_start_time
     merged_audio_start_time
 )
-print_report output/segment-split-half-scale ${timestamps_transcode_merge_columns[@]}
+print_report "$output_dir/segment-split-half-scale" ${timestamps_transcode_merge_columns[@]}
 echo
 
 echo "Timestamp report for segment-split-vp9-convert"
-print_report output/segment-split-vp9-convert ${timestamps_transcode_merge_columns[@]}
+print_report "$output_dir/segment-split-vp9-convert" ${timestamps_transcode_merge_columns[@]}
 echo
 
 echo "Frame type (input, output, merged) report for segment-split-half-scale"
@@ -55,11 +56,11 @@ frame_types_transcode_merge_columns=(
     input_same_frame_types_as_output
     output_same_frame_types_as_merged
 )
-print_report output/segment-split-half-scale ${frame_types_transcode_merge_columns[@]}
+print_report "$output_dir/segment-split-half-scale" ${frame_types_transcode_merge_columns[@]}
 echo
 
 echo "Frame type (input, output, merged) report for segment-split-vp9-convert"
-print_report output/segment-split-vp9-convert ${frame_types_transcode_merge_columns[@]}
+print_report "$output_dir/segment-split-vp9-convert" ${frame_types_transcode_merge_columns[@]}
 echo
 
 echo "Frame type (input, segments, merged) report for segment-split-only"
@@ -83,11 +84,11 @@ frame_types_merge_split_columns=(
     input_same_frame_types_as_segments
     segments_same_frame_types_as_merged
 )
-print_report output/segment-split-only ${frame_types_merge_split_columns[@]}
+print_report "$output_dir/segment-split-only" ${frame_types_merge_split_columns[@]}
 echo
 
 echo "Frame type report for segment-split-half-scale"
-print_report output/segment-split-half-scale ${frame_types_merge_split_columns[@]}
+print_report "$outputdir/segment-split-half-scale" ${frame_types_merge_split_columns[@]}
 echo
 
 echo "Frame type report"
@@ -100,13 +101,13 @@ frame_types_columns=(
     input_b_frame_count
     input_duration_rounded
 )
-print_report output/segment-split-only ${frame_types_columns[@]}
+print_report "$output_dir/segment-split-only" ${frame_types_columns[@]}
 echo
 
 
 echo "Frame type comparison between input video, segment videos and merged video (split without transcoding)"
-for video_file in $(ls -1 output/segment-split-only); do
+for video_file in $(ls -1 "$output_dir/segment-split-only"); do
     echo "================================================"
-    experiment_dir="output/segment-split-only/$video_file"
+    experiment_dir="$output_dir/segment-split-only/$video_file"
     reports/show-frame-types.sh "$experiment_dir"
 done
