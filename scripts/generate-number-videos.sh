@@ -15,21 +15,21 @@ for i in $(seq 1 "$num_frames"); do
         label:$i            \
         -extent     352x288 \
         -quality    100     \
-        number-frames/$i.png
+        "number-frames/$num_frames-$i.png"
 done
 
 function generate_number_video {
     local codec="$1"
     local format="$2"
 
-    echo "Generating number-videos/numbers-$codec.$format"
+    echo "Generating number-videos/numbers-$num_frames-$codec.$format"
 
     ffmpeg                                     \
         -nostdin                               \
         -v error                               \
-        -i number-frames/%d.png                \
+        -i "number-frames/$num_frames-%d.png"  \
         -vcodec "$codec"                       \
-        "number-videos/numbers-$codec.$format"
+        "number-videos/numbers-$num_frames-$codec.$format"
 }
 
 generate_number_video vp9    mp4
