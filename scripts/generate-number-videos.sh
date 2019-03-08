@@ -1,7 +1,7 @@
 mkdir --parents number-frames/
 mkdir --parents number-videos/
 
-num_frames=100
+num_frames="$1"
 
 echo "Generating $num_frames number frames"
 
