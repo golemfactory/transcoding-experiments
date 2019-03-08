@@ -14,9 +14,27 @@ function strip_extension {
     printf "%s" "${file_path%.*}"
 }
 
+
 function basename_without_extension {
     local file_path="$1"
 
     local path_without_extension="$(strip_extension "$file_path")"
     printf "%s" "$(basename "$path_without_extension")"
+}
+
+
+function join_strings {
+    local separator="$1"
+    local values=("${@:2}")
+
+    if [[ ${#values[@]} > 0 ]]; then
+        result=${values[0]}
+        unset values[0]
+
+        for value in ${values[@]}; do
+            result="$result$separator$value"
+        done
+
+        printf "%s" "$result"
+    fi
 }
