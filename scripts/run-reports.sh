@@ -5,103 +5,27 @@ source functions/all.sh
 output_dir="$1"
 
 echo "Input file info"
-columns=(
-    input_video_name
-    input_num_streams
-    input_video_format
-    input_video_codec
-    input_duration_rounded
-    input_frame_count
-    input_unique_frame_types
-    input_i_frame_count
-    input_p_frame_count
-    input_b_frame_count
-)
-print_report "$output_dir/segment-split-only" ${columns[@]}
+print_report "$output_dir/segment-split-only" ${report_input_file_info_columns[@]}
 echo
 
 echo "Timestamp report for segment-split-half-scale"
-timestamps_transcode_merge_columns=(
-    input_video_name
-    input_duration
-    output_duration
-    merged_duration
-    input_video_start_time
-    output_video_start_time
-    merged_video_start_time
-    input_audio_start_time
-    output_audio_start_time
-    merged_audio_start_time
-)
-print_report "$output_dir/segment-split-half-scale" ${timestamps_transcode_merge_columns[@]}
+print_report "$output_dir/segment-split-half-scale" ${report_timestamps_transcode_merge_columns[@]}
 echo
 
 echo "Timestamp report for segment-split-vp9-convert"
-print_report "$output_dir/segment-split-vp9-convert" ${timestamps_transcode_merge_columns[@]}
+print_report "$output_dir/segment-split-vp9-convert" ${report_timestamps_transcode_merge_columns[@]}
 echo
 
 echo "Frame type report for segment-split-half-scale"
-frame_types_with_transcoding_columns=(
-    input_video_name
-    input_frame_count
-    output_frame_count
-    segment_frame_count
-    transcoded_segment_frame_count
-    merged_frame_count
-    input_unique_frame_types
-    output_unique_frame_types
-    segment_unique_frame_types
-    transcoded_segment_unique_frame_types
-    merged_unique_frame_types
-    input_i_frame_count
-    output_i_frame_count
-    segment_i_frame_count
-    transcoded_segment_i_frame_count
-    merged_i_frame_count
-    input_p_frame_count
-    output_p_frame_count
-    segment_p_frame_count
-    transcoded_segment_p_frame_count
-    merged_p_frame_count
-    input_b_frame_count
-    output_b_frame_count
-    segment_b_frame_count
-    transcoded_segment_b_frame_count
-    merged_b_frame_count
-    input_same_frame_types_as_output
-    output_same_frame_types_as_merged
-    input_same_frame_types_as_segments
-    segments_same_frame_types_as_merged
-)
-print_report "$output_dir/segment-split-half-scale" ${frame_types_with_transcoding_columns[@]}
+print_report "$output_dir/segment-split-half-scale" ${report_frame_types_with_transcoding_columns[@]}
 echo
 
 echo "Frame type report for segment-split-vp9-convert"
-print_report "$output_dir/segment-split-vp9-convert" ${frame_types_with_transcoding_columns[@]}
+print_report "$output_dir/segment-split-vp9-convert" ${report_frame_types_with_transcoding_columns[@]}
 echo
 
 echo "Frame type report for segment-split-only"
-frame_types_without_transcoding_columns=(
-    input_video_name
-    input_frame_count
-    segment_frame_count
-    merged_frame_count
-    input_unique_frame_types
-    segment_unique_frame_types
-    merged_unique_frame_types
-    input_i_frame_count
-    segment_i_frame_count
-    merged_i_frame_count
-    input_p_frame_count
-    segment_p_frame_count
-    merged_p_frame_count
-    input_b_frame_count
-    segment_b_frame_count
-    merged_b_frame_count
-    input_same_frame_types_as_segments
-    segments_same_frame_types_as_merged
-)
-print_report "$output_dir/segment-split-only" ${frame_types_without_transcoding_columns[@]}
+print_report "$output_dir/segment-split-only" ${report_frame_types_without_transcoding_columns[@]}
 echo
 
 echo "Frame type comparison between input video, segment videos and merged video (split without transcoding)"
