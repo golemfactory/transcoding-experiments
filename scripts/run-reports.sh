@@ -40,5 +40,6 @@ echo
 echo "Frame type comparison between input video, segment videos and merged video (split without transcoding)"
 for video_file in $video_files; do
     echo "================================================"
-    reports/show-frame-types.sh segment-split-only "$video_file"
+    experiment_dir="output/segment-split-only/$video_file"
+    reports/show-frame-types.sh "$experiment_dir"
 done
