@@ -3,16 +3,19 @@
 source functions/all.sh
 
 num_segments="$1"
-video_files="${@:2}"
+input_dir="$2"
+output_dir="$3"
 
-mkdir output/
+video_files="$(find "$input_dir" -mindepth 1 -maxdepth 1)"
+
+mkdir --parents "$output_dir"
 
 function run_experiment {
     local experiment_name="$1"
     local video_file="$2"
 
     echo "Running experiment '$experiment_name' on $video_file"
-    experiments/$experiment_name.sh "$num_segments" "$video_file" output
+    experiments/$experiment_name.sh "$num_segments" "$video_file" "$output_dir"
     echo
 }
 
