@@ -41,6 +41,27 @@ function ffmpeg_concat_demuxer {
 }
 
 
+function ffmpeg_concat_protocol {
+    local segment_list_file="$1"
+    local output_file="$2"
+
+    joined_file_names="$(join_strings '|' $(cat "$segment_list_file"))"
+    absolute_output_path="$(realpath "$output_file")"
+
+    echo "ffmpeg_concat_protocol: output=$output_file"
+
+    pushd "$(dirname "$segment_list_file")" > /dev/null
+    ffmpeg                                \
+        -nostdin                          \
+        -hide_banner                      \
+        -v    error                       \
+        -i    "concat:$joined_file_names" \
+        -c    copy                        \
+        "$absolute_output_path"
+    popd > /dev/null
+}
+
+
 function flat_file_list_to_ffconcat_list {
     local input_segment_list_file="$1"
     local output_segment_list_file="$2"
@@ -96,4 +117,17 @@ function merge_with_ffmpeg_concat_demuxer {
 
     flat_file_list_to_ffconcat_list "$input_dir/segments.txt" "$input_dir/segments.ffconcat"
     ffmpeg_concat_demuxer "$input_dir/segments.ffconcat" "$output_dir/merged.$output_file_extension"
+}
+
+
+function merge_with_ffmpeg_concat_protocol {
+    local input_dir="$1"
+    local output_dir="$2"
+    local output_file_extension="$3"
+
+    echo "Merging segments with ffmpeg concat protocol"
+
+    mkdir --parents "$output_dir"
+
+    ffmpeg_concat_protocol "$input_dir/segments.txt" "$output_dir/merged.$output_file_extension"
 }
