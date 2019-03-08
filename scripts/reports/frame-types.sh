@@ -36,19 +36,6 @@ function frame_types_merge_split_report_header {
 }
 
 
-function frame_types_from_all_segments_side_by_side {
-    local segment_dir="$1"
-
-    segment_frame_types=""
-    for segment_basename in $(cat "$segment_dir/segments.txt"); do
-        segment_file="$segment_dir/$segment_basename"
-        segment_frame_types="$segment_frame_types$(load_frame_types_for_video "$video_file")"
-    done
-
-    printf "%s" "$segment_frame_types"
-}
-
-
 function frame_types_merge_split_report_row {
     local video_file="$1"
     local experiment_dir="$2"
