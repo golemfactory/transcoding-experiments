@@ -24,6 +24,8 @@
 - Problematic videos provided separately by the CGI team
     - `Beach.mp4`
     - `byger-liten.avi`
+    - `gada.mp4`
+    - `tortoise.mp4`
     - `gada-100-first-segment.mp4`
         - This the first segment produced by splitting `gada.mp4` with `ffmpeg -segment` into 100 parts.
         - It can be used as a shorter sample that still has the same problems as `gada.mp4`
@@ -36,7 +38,7 @@ The results below have been gathered from three experiments executed for each fi
 - `segment-split-only`:
     - Splitting the input file with `ffmpeg -segment`
     - Merging the segments `ffmpeg -f concat` (no transcoding)
-- `segment-split-half-scale` 
+- `segment-split-half-scale`
     - Splitting the input file with `ffmpeg -segment`
     - Transcoding to half size with `ffmpeg -vf "scale=iw*0.5:ih*0.5"`
     - Merging the transcoded segments `ffmpeg -f concat`
@@ -82,6 +84,8 @@ The results below have been gathered from three experiments executed for each fi
 | TRA3106-[codec=h263].3gp                 |       1 | mov,mp4,m4a,3gp,3g2,mj2 | h263       |           17 |   509 |      IP |     53 |    456 |      0 |
 | Beach.mp4                                |       2 | mov,mp4,m4a,3gp,3g2,mj2 | h264       |           80 |  1992 |     BIP |     27 |    509 |   1456 |
 | byger-liten.avi                          |       1 | avi                     | mpeg4      |          121 |  3037 |      IP |     49 |   2988 |      0 |
+| gada.mp4                                 |       2 | mov,mp4,m4a,3gp,3g2,mj2 | h264       |         1286 | 32144 |     BIP |    391 |  16942 |  14811 |
+| tortoise.mp4                             |       2 | mov,mp4,m4a,3gp,3g2,mj2 | h264       |          152 |  4560 |     BIP |     51 |   1543 |   2966 |
 | gada-100-first-segment.mp4               |       2 | mov,mp4,m4a,3gp,3g2,mj2 | h264       |           15 |   384 |     BIP |      8 |    198 |    178 |
 | grb_2.m4v                                |       1 | mov,mp4,m4a,3gp,3g2,mj2 | h264       |           28 |   835 |     BIP |      6 |    226 |    603 |
 
@@ -121,6 +125,8 @@ The results below have been gathered from three experiments executed for each fi
 | TRA3106-[codec=h263].3gp                 |   16.984000 |    16.984000 |    16.986000 |   0.000000 |    0.000000 |    0.000000 |            |             |             |
 | Beach.mp4                                |   79.743333 |    79.766000 |    79.766000 |   0.000000 |    0.000000 |    0.021016 |   0.000000 |    0.000000 |    0.000000 |
 | byger-liten.avi                          |  121.480000 |   121.480000 |   121.480000 |   0.000000 |    0.000000 |    0.000000 |            |             |             |
+| gada.mp4                                 | 1285.781767 |  1285.805000 |  1285.805000 |   0.000000 |    0.000000 |    0.022969 |   0.000000 |    0.000000 |    0.000000 |
+| tortoise.mp4                             |  152.170000 |   152.192000 |   152.193000 |   0.000000 |    0.000000 |    0.021000 |   0.000000 |    0.000000 |    0.000000 |
 | gada-100-first-segment.mp4               |   15.360000 |    15.360000 |    15.360000 |   0.040000 |    0.000000 |    0.022969 |   0.040000 |    0.000000 |    0.000000 |
 | grb_2.m4v                                |   27.862000 |    27.862000 |    27.863000 |   0.033000 |    0.000000 |    0.000000 |            |             |             |
 
@@ -142,9 +148,11 @@ The results below have been gathered from three experiments executed for each fi
 | Panasonic-[codec=vp9].webm               |   46.120000 |    46.122000 |    46.168000 |   0.007000 |    0.003000 |    0.043000 |  -0.007000 |    0.000000 |    0.000000 |
 | star_trails-[codec=wmv2].wmv             |   21.292000 |    21.251000 |    21.365000 |   0.043000 |    0.043000 |    0.043000 |   0.000000 |    0.000000 |    0.000000 |
 | TRA3106-[codec=h263].3gp                 |   16.984000 |    16.983000 |    16.980000 |   0.000000 |    0.000000 |    0.000000 |            |             |             |
-| gada-100-first-segment.mp4               |   15.360000 |    15.363000 |    15.369000 |   0.040000 |    0.003000 |    0.003000 |   0.040000 |    0.000000 |    0.000000 |
 | Beach.mp4                                |   79.743333 |    79.747000 |    79.765000 |   0.000000 |    0.003000 |    0.003000 |   0.000000 |    0.000000 |    0.000000 |
 | byger-liten.avi                          |  121.480000 |   121.480000 |   121.480000 |   0.000000 |    0.000000 |    0.000000 |            |             |             |
+| gada.mp4                                 | 1285.781767 |  1285.785000 |  1285.801000 |   0.000000 |    0.003000 |    0.003000 |   0.000000 |    0.000000 |    0.000000 |
+| tortoise.mp4                             |  152.170000 |   152.173000 |   152.193000 |   0.000000 |    0.003000 |    0.003000 |   0.000000 |    0.000000 |    0.000000 |
+| gada-100-first-segment.mp4               |   15.360000 |    15.363000 |    15.369000 |   0.040000 |    0.003000 |    0.003000 |   0.040000 |    0.000000 |    0.000000 |
 | grb_2.m4v                                |   27.862000 |    27.861000 |    27.859000 |   0.033000 |    0.000000 |    0.000000 |            |             |             |
 
 ## Frame types
@@ -200,9 +208,11 @@ The results below have been gathered from three experiments executed for each fi
 | Panasonic-[codec=vp9].webm               |  1152 |  1152 |     1152 |      1152 |  1152 |      IP |       IP |           IP |            IP |       IP |      9 |      9 |          9 |           9 |      9 |   1143 |   1143 |       1143 |        1143 |   1143 |      0 |      0 |          0 |           0 |      0 |       yes |        yes |           yes |            yes |
 | star_trails-[codec=wmv2].wmv             |   529 |   530 |      529 |       530 |   530 |      IP |       IP |           IP |            IP |       IP |     45 |     45 |         45 |          46 |     46 |    484 |    485 |        484 |         484 |    484 |      0 |      0 |          0 |           0 |      0 |        no |         no |           yes |             no |
 | TRA3106-[codec=h263].3gp                 |   509 |   509 |      509 |       509 |   509 |      IP |       IP |           IP |            IP |       IP |     53 |     48 |         53 |          48 |     48 |    456 |    461 |        456 |         461 |    461 |      0 |      0 |          0 |           0 |      0 |        no |         no |           yes |             no |
-| gada-100-first-segment.mp4               |   384 |   384 |      384 |       384 |   384 |     BIP |      BIP |          BIP |           BIP |      BIP |      8 |      6 |          8 |           8 |      8 |    198 |    126 |        198 |         126 |    126 |    178 |    252 |        178 |         250 |    250 |        no |         no |           yes |             no |
 | Beach.mp4                                |  1992 |  1992 |     1992 |      1992 |  1992 |     BIP |      BIP |          BIP |           BIP |      BIP |     27 |      8 |         27 |          10 |     10 |    509 |    502 |        509 |         501 |    501 |   1456 |   1482 |       1456 |        1481 |   1481 |        no |         no |           yes |             no |
 | byger-liten.avi                          |  3037 |  3037 |     3037 |      3037 |  3037 |      IP |       IP |           IP |            IP |       IP |     49 |    260 |         49 |         260 |    260 |   2988 |   2777 |       2988 |        2777 |   2777 |      0 |      0 |          0 |           0 |      0 |        no |         no |           yes |             no |
+| gada.mp4                                 | 32144 | 32144 |    32144 |     32144 | 32144 |     BIP |      BIP |          BIP |           BIP |      BIP |    391 |    236 |        391 |         239 |    239 |  16942 |   9774 |      16942 |        9772 |   9772 |  14811 |  22134 |      14811 |       22133 |  22133 |        no |         no |           yes |             no |
+| tortoise.mp4                             |  4560 |  4560 |     4560 |      4560 |  4560 |     BIP |      BIP |          BIP |           BIP |      BIP |     51 |     19 |         51 |          21 |     21 |   1543 |   1230 |       1543 |        1225 |   1225 |   2966 |   3311 |       2966 |        3314 |   3314 |        no |         no |           yes |             no |
+| gada-100-first-segment.mp4               |   384 |   384 |      384 |       384 |   384 |     BIP |      BIP |          BIP |           BIP |      BIP |      8 |      6 |          8 |           8 |      8 |    198 |    126 |        198 |         126 |    126 |    178 |    252 |        178 |         250 |    250 |        no |         no |           yes |             no |
 | grb_2.m4v                                |   835 |   835 |      835 |       835 |   835 |     BIP |      BIP |          BIP |           BIP |      BIP |      6 |      6 |          6 |           6 |      6 |    226 |    317 |        226 |         314 |    314 |    603 |    512 |        603 |         515 |    515 |        no |         no |           yes |             no |
 
 ### Experiment: `segment-split-vp9-convert`
@@ -223,9 +233,11 @@ The results below have been gathered from three experiments executed for each fi
 | Panasonic-[codec=vp9].webm               |  1152 |  1152 |     1152 |      1152 |  1152 |      IP |       IP |           IP |            IP |       IP |      9 |      9 |          9 |           9 |      9 |   1143 |   1143 |       1143 |        1143 |   1143 |      0 |      0 |          0 |           0 |      0 |       yes |        yes |           yes |            yes |
 | star_trails-[codec=wmv2].wmv             |   529 |   529 |      529 |       529 |   529 |      IP |       IP |           IP |            IP |       IP |     45 |      5 |         45 |           6 |      6 |    484 |    524 |        484 |         523 |    523 |      0 |      0 |          0 |           0 |      0 |        no |         no |           yes |             no |
 | TRA3106-[codec=h263].3gp                 |   509 |   509 |      509 |       509 |   509 |      IP |       IP |           IP |            IP |       IP |     53 |      4 |         53 |           6 |      6 |    456 |    505 |        456 |         503 |    503 |      0 |      0 |          0 |           0 |      0 |        no |         no |           yes |             no |
-| gada-100-first-segment.mp4               |   384 |   384 |      384 |       384 |   384 |     BIP |       IP |          BIP |            IP |       IP |      8 |      3 |          8 |           3 |      3 |    198 |    381 |        198 |         381 |    381 |    178 |      0 |        178 |           0 |      0 |        no |        yes |           yes |             no |
 | Beach.mp4                                |  1992 |  1992 |     1992 |      1992 |  1992 |     BIP |       IP |          BIP |            IP |       IP |     27 |     16 |         27 |          17 |     17 |    509 |   1976 |        509 |        1975 |   1975 |   1456 |      0 |       1456 |           0 |      0 |        no |         no |           yes |             no |
 | byger-liten.avi                          |  3037 |  3037 |     3037 |      3037 |  3037 |      IP |       IP |           IP |            IP |       IP |     49 |     24 |         49 |          25 |     25 |   2988 |   3013 |       2988 |        3012 |   3012 |      0 |      0 |          0 |           0 |      0 |        no |         no |           yes |             no |
+| gada.mp4                                 | 32144 | 32144 |    32144 |     32144 | 32144 |     BIP |       IP |          BIP |            IP |       IP |    391 |    252 |        391 |         252 |    252 |  16942 |  31892 |      16942 |       31892 |  31892 |  14811 |      0 |      14811 |           0 |      0 |        no |        yes |           yes |             no |
+| tortoise.mp4                             |  4560 |  4560 |     4560 |      4560 |  4560 |     BIP |       IP |          BIP |            IP |       IP |     51 |     36 |         51 |          41 |     41 |   1543 |   4524 |       1543 |        4519 |   4519 |   2966 |      0 |       2966 |           0 |      0 |        no |         no |           yes |             no |
+| gada-100-first-segment.mp4               |   384 |   384 |      384 |       384 |   384 |     BIP |       IP |          BIP |            IP |       IP |      8 |      3 |          8 |           3 |      3 |    198 |    381 |        198 |         381 |    381 |    178 |      0 |        178 |           0 |      0 |        no |        yes |           yes |             no |
 | grb_2.m4v                                |   835 |   835 |      835 |       835 |   835 |     BIP |       IP |          BIP |            IP |       IP |      6 |      7 |          6 |           8 |      8 |    226 |    828 |        226 |         827 |    827 |    603 |      0 |        603 |           0 |      0 |        no |         no |           yes |             no |
 
 ### Experiment: `segment-split-only`
@@ -246,7 +258,9 @@ The results below have been gathered from three experiments executed for each fi
 | Panasonic-[codec=vp9].webm               |  1152 |     1152 |  1152 |      IP |           IP |       IP |      9 |          9 |      9 |   1143 |       1143 |   1143 |      0 |          0 |      0 |           yes |            yes |
 | star_trails-[codec=wmv2].wmv             |   529 |      529 |   529 |      IP |           IP |       IP |     45 |         45 |     45 |    484 |        484 |    484 |      0 |          0 |      0 |           yes |            yes |
 | TRA3106-[codec=h263].3gp                 |   509 |      509 |   509 |      IP |           IP |       IP |     53 |         53 |     53 |    456 |        456 |    456 |      0 |          0 |      0 |           yes |            yes |
-| gada-100-first-segment.mp4               |   384 |      384 |   384 |     BIP |          BIP |      BIP |      8 |          8 |      8 |    198 |        198 |    198 |    178 |        178 |    178 |           yes |            yes |
 | Beach.mp4                                |  1992 |     1992 |  1992 |     BIP |          BIP |      BIP |     27 |         27 |     27 |    509 |        509 |    509 |   1456 |       1456 |   1456 |           yes |            yes |
 | byger-liten.avi                          |  3037 |     3037 |  3037 |      IP |           IP |       IP |     49 |         49 |     49 |   2988 |       2988 |   2988 |      0 |          0 |      0 |           yes |            yes |
+| gada.mp4                                 | 32144 |    32144 | 32144 |     BIP |          BIP |      BIP |    391 |        391 |    391 |  16942 |      16942 |  16942 |  14811 |      14811 |  14811 |           yes |            yes |
+| tortoise.mp4                             |  4560 |     4560 |  4560 |     BIP |          BIP |      BIP |     51 |         51 |     51 |   1543 |       1543 |   1543 |   2966 |       2966 |   2966 |           yes |            yes |
+| gada-100-first-segment.mp4               |   384 |      384 |   384 |     BIP |          BIP |      BIP |      8 |          8 |      8 |    198 |        198 |    198 |    178 |        178 |    178 |           yes |            yes |
 | grb_2.m4v                                |   835 |      835 |   835 |     BIP |          BIP |      BIP |      6 |          6 |      6 |    226 |        226 |    226 |    603 |        603 |    603 |           yes |            yes |
