@@ -43,7 +43,7 @@ echo "Generating $num_frames number frames"
 
 # NOTE: The H.263 codec supports only a few specific resolutions. 352x288 is one of them.
 for i in $(seq 1 "$num_frames"); do
-    generate_frame default $i 352 288
+    generate_frame default $i 128 128
 done
 
 generate_number_video default flv1       flv
