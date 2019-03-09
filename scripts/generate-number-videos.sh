@@ -46,34 +46,27 @@ echo "Generating $num_frames number frames"
 # NOTE: The H.263 codec supports only a few specific resolutions. 352x288 is one of them.
 for i in $(seq 1 "$num_frames"); do
     generate_frame default $i 128 128
-    generate_frame h261    $i 352 288   # Resolutions supported by h261:             176x144, 352x288
     generate_frame h263    $i 352 288   # Resolutions supported by h263:     128x96, 176x144, 352x288,   704x576, 1408x1152
-    generate_frame dvvideo $i 720 576   # Resolutions supported by dvvideo: 720x480, 720x576, 960x720, 1280x1080, 1440x1080
 done
 
 # Tier 1: popular codecs
 generate_number_video default av1        mkv   # Alliance for Open Media AV1
 generate_number_video default cinepak    cpk   # Cinepak
-generate_number_video default dirac      drc   # Dirac
-generate_number_video default dirac      mkv
+generate_number_video default dirac      mkv   # Dirac
 generate_number_video default dirac      mp4
 generate_number_video default dirac      avi
 generate_number_video default flv1       flv
 generate_number_video default flv1       mkv   # FLV / Sorenson Spark / Sorenson H.263 (Flash Video)
 generate_number_video default flv1       avi
 generate_number_video h263    h263       3gp   # H.263 / H.263-1996, H.263+ / H.263-1998 / H.263 version 2
-generate_number_video h263    h263       h263
 generate_number_video default h264       mp4   # H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10
-generate_number_video default h264       h264
 generate_number_video default h264       mkv
 generate_number_video default h264       avi
 generate_number_video default h264       flv
 generate_number_video default hevc       mp4   # H.265 / HEVC (High Efficiency Video Coding)
 generate_number_video default hevc       mkv
-generate_number_video default hevc       hevc
 generate_number_video default hevc       mpeg
-generate_number_video default mjpeg      mjpeg # Motion JPEG (decoders: mjpeg mjpeg_cuvid )
-generate_number_video default mjpeg      avi
+generate_number_video default mjpeg      avi    # Motion JPEG (decoders: mjpeg mjpeg_cuvid )
 generate_number_video default mjpeg      mov
 generate_number_video default mjpeg      mkv
 generate_number_video default mpeg1video mpeg  # MPEG-1 video
@@ -92,15 +85,11 @@ generate_number_video default wmv1       asf   # Windows Media Video 7
 generate_number_video default wmv2       asf   # Windows Media Video 8
 
 # Tier 2: some less popular codecs
-generate_number_video dvvideo dvvideo    dv    # DV (Digital Video)
-generate_number_video h261    h261       h261  # H.261
-generate_number_video h263    h263p      h263  # H.263+ / H.263-1998 / H.263 version 2
 generate_number_video default huffyuv    mkv   # HuffYUV
-generate_number_video default msmpeg4v2  mpeg  # MPEG-4 part 2 Microsoft variant version 2
-generate_number_video default msmpeg4v3  mpeg  # MPEG-4 part 2 Microsoft variant version 3
-generate_number_video default rawvideo   mkv   # raw video
-generate_number_video default rv10       rm    # RealVideo 1.0
-generate_number_video default rv20       rm    # RealVideo 2.0
+generate_number_video default msmpeg4v2  avi  # MPEG-4 part 2 Microsoft variant version 2
+generate_number_video default msmpeg4v2  wmv
+generate_number_video default msmpeg4v3  avi  # MPEG-4 part 2 Microsoft variant version 3
+generate_number_video default msmpeg4v3  wmv
 generate_number_video default svq1       mov   # Sorenson Vector Quantizer 1 / Sorenson Video 1 / SVQ1
 generate_number_video default v210       avi  # Uncompressed 4:2:2 10-bit
 generate_number_video default v308       avi   # Uncompressed packed 4:4:4
