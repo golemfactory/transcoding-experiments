@@ -1,3 +1,5 @@
+#!/bin/bash -e
+
 mkdir --parents number-frames/
 mkdir --parents number-videos/
 
