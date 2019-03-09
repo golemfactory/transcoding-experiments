@@ -37,6 +37,7 @@ function generate_number_video {
         -v      error                                            \
         -i      "number-frames/$frame_prefix-$num_frames-%d.png" \
         -vcodec "$codec"                                         \
+        -g      25                                               \
         -strict -2                                               \
         "number-videos/numbers-$num_frames-$codec.$format"
 }
