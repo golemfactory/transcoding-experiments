@@ -21,7 +21,9 @@ function run_experiment {
 
 experiments=(
     segment-split-only
+    ss-split-only
     segment-split-half-scale
+    ss-split-half-scale
     segment-split-vp9-convert
     segment-split-concat-protocol-merge-half-scale
 )

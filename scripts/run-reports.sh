@@ -4,12 +4,21 @@ source functions/all.sh
 
 output_dir="$1"
 
+# INPUT FILE INFO
+
 echo "Input file info"
 print_report "$output_dir/segment-split-only" ${report_input_file_info_columns[@]}
 echo
 
+
+# TIMESTAMP REPORT
+
 echo "Timestamp report for segment-split-half-scale"
 print_report "$output_dir/segment-split-half-scale" ${report_timestamps_transcode_merge_columns[@]}
+echo
+
+echo "Timestamp report for ss-split-half-scale"
+print_report "$output_dir/ss-split-half-scale" ${report_timestamps_transcode_merge_columns[@]}
 echo
 
 echo "Timestamp report for segment-split-vp9-convert"
@@ -20,8 +29,15 @@ echo "Timestamp report for segment-split-concat-protocol-merge-half-scale"
 print_report "$output_dir/segment-split-concat-protocol-merge-half-scale" ${report_timestamps_transcode_merge_columns[@]}
 echo
 
+
+# FRAME TYPE REPORT (SPLIT AND TRANSCODING)
+
 echo "Frame type report for segment-split-half-scale"
 print_report "$output_dir/segment-split-half-scale" ${report_frame_types_with_transcoding_columns[@]}
+echo
+
+echo "Frame type report for ss-split-half-scale"
+print_report "$output_dir/ss-split-half-scale" ${report_frame_types_with_transcoding_columns[@]}
 echo
 
 echo "Frame type report for segment-split-vp9-convert"
@@ -32,9 +48,19 @@ echo "Frame type report for segment-split-concat-protocol-merge-half-scale"
 print_report "$output_dir/segment-split-concat-protocol-merge-half-scale" ${report_frame_types_with_transcoding_columns[@]}
 echo
 
+
+# FRAME TYPE REPORT (SPLIT ONLY)
+
 echo "Frame type report for segment-split-only"
 print_report "$output_dir/segment-split-only" ${report_frame_types_without_transcoding_columns[@]}
 echo
+
+echo "Frame type report for ss-split-only"
+print_report "$output_dir/ss-split-only" ${report_frame_types_without_transcoding_columns[@]}
+echo
+
+
+# FRAME TYPE DUMP (SPLIT ONLY)
 
 echo "Frame type comparison between input video, segment videos and merged video (split without transcoding)"
 for video_file in $(ls -1 "$output_dir/segment-split-only"); do
