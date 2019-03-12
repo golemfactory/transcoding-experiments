@@ -4,6 +4,7 @@ mkdir --parents number-frames/
 mkdir --parents number-videos/
 
 num_frames="$1"
+gop_size=25
 
 function generate_frame {
     local frame_prefix="$1"
@@ -30,19 +31,19 @@ function generate_number_video {
     local codec="$2"
     local format="$3"
 
-    echo "Generating number-videos/numbers-$num_frames-$codec.$format"
+    echo "Generating number-videos/numbers-$num_frames-gop-$gop_size-$codec.$format"
 
     ffmpeg                                                       \
         -nostdin                                                 \
         -v      error                                            \
         -i      "number-frames/$frame_prefix-$num_frames-%d.png" \
         -vcodec "$codec"                                         \
-        -g      25                                               \
+        -g      "$gop_size"                                      \
         -strict -2                                               \
-        "number-videos/numbers-$num_frames-$codec.$format"
+        "number-videos/numbers-$num_frames-gop-$gop_size-$codec.$format"
 }
 
-echo "Generating $num_frames number frames"
+echo "Generating $num_frames number frames with GOP size $gop_size"
 
 # NOTE: The H.263 codec supports only a few specific resolutions. 352x288 is one of them.
 for i in $(seq 1 "$num_frames"); do
