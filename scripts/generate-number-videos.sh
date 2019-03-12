@@ -4,7 +4,11 @@ mkdir --parents number-frames/
 mkdir --parents number-videos/
 
 num_frames="$1"
-gop_size=25
+gop_size="$2"    # GOP = Group of Pictures; each GOP starts with an I-frame
+
+if [[ "$gop_size" == "" ]]; then
+    gop_size=25
+fi
 
 function generate_frame {
     local frame_prefix="$1"
