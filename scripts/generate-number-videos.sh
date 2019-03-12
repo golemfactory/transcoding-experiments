@@ -53,6 +53,7 @@ echo "Generating $num_frames number frames with GOP size $gop_size"
 for i in $(seq 1 "$num_frames"); do
     generate_frame default $i 128 128
     generate_frame h263    $i 352 288   # Resolutions supported by h263:     128x96, 176x144, 352x288,   704x576, 1408x1152
+    generate_frame dvvideo $i 720 576   # Resolutions supported by dvvideo: 720x480, 720x576, 960x720, 1280x1080, 1440x1080
 done
 
 # Tier 1: popular codecs
@@ -103,3 +104,19 @@ generate_number_video default v408       avi   # Uncompressed packed QT 4:4:4:4
 generate_number_video default v410       avi   # Uncompressed 4:4:4 10-bit
 generate_number_video default y41p       avi   # Uncompressed YUV 4:1:1 12-bit
 generate_number_video default yuv4       avi   # Uncompressed packed 4:2:0
+
+# Tier 3: problematic codecs/containers.
+# Splitting, merging or transcoding most of them ends with an error.
+generate_number_video h263    h261      h261   # H.261
+generate_number_video h263    h263      h263
+generate_number_video h263    h263p     h263   # H.263+ / H.263-1998 / H.263 version 2
+generate_number_video default h264      h264
+generate_number_video default hevc      hevc
+generate_number_video default mjpeg     mjpeg
+generate_number_video default rv10      rm     # RealVideo 1.0
+generate_number_video default rv20      rm     # RealVideo 2.0
+generate_number_video default dirac     drc    #
+generate_number_video default msmpeg4v2 mpeg   # MPEG-4 part 2 Microsoft variant version 2
+generate_number_video default msmpeg4v3 mpeg   # MPEG-4 part 2 Microsoft variant version 3
+generate_number_video default rawvideo  mkv    # raw video
+generate_number_video dvvideo dvvideo   dv     # DV (Digital Video)
