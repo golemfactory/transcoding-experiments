@@ -37,6 +37,7 @@ Table of contents:
     3. [Looking closer at the segments](#looking-closer-at-the-segments)
     4. [Experiments: effects of extra processing on the frame shift](#experiments-effects-of-extra-processing-on-the-frame-shift)
     5. [Conclusions](#conclusions-2)
+9. [Overall conclusions from the experiments](#9-overall-conclusions-from-the-experiments)
 
 All the experiments in this report were splitting the file into 5 segments unless stated otherwise.
 Note that this does no mean that that was the actual number of segments - for example ffmpeg segment chooses split points on its own, using desired segment duration only as a hint.
@@ -1692,3 +1693,30 @@ Observations:
 - Splitting the file into frames and using them to rebuild the vdieo seems like a good way to get a properly merged file for reference.
 - ffmpeg seems to have problems merging AAC audio segments.
     We can avoid it and we probably should.
+
+## 9. Overall conclusions from the experiments
+1. Splitting with ffmpeg segment and merging with ffmpeg concat demuxer produces files with the correct number of frames in all relevant cases.
+    - For some files frame numbers differ but those same files the numbers of frames sometimes differ even when they're transcoded without split&merge so the split&merge itself does not seem to be the problem.
+2. Frame shift visible in some videos after merging seems to be caused by something in the audio track.
+    - Removing the audio track before split and adding it back after merge removes the frame shift.
+    - This still needs to be tested on the full set of videos.
+        For now tested only on `gada.mp4`.
+2. Slight changes in video duration and `start_time` don't seem to affect the number of frames or time shift in the output.
+    - They sometimes differ even in the file transcoded without split&merge.
+    - Files without an audio stream don't exhibit these changes at all, except in a few cases where the file seems to be broken or not correctly supported by ffmpeg (e.g. `numbers-10000-gop-25-hevc.mpeg`, `numbers-250-gop-25-mpeg1video.m1v`).
+4. Merging with ffmpeg concat protocol is not viable.
+    It does not work for too many codec/container combinations.
+    What's worse, it sometimes seems to work (merge does not fail) but silently discards all the segments except for the first one.
+5. Splitting vith `ffmpeg -ss` is not viable.
+    - I managed to reproduce the artifacts reported by the CGI team in the `ffmpeg -ss` split method.
+    - Splitting with input seek (i.e. `-ss` before `-i`) and merging with concat demuxer gives the best results but the merged file has a few frames too many.
+        - Extra frames seem to be produced both at the split step and at the merge step.
+        - B-frames don't seem to be the cause.
+          The video does get split on I-frames and in the videos I-frames are never preceded by a B-frame.
+    - ffmpeg does not always split the videos on I-frames when using this method.
+        - They're often split between P-frames or B-frames.
+        - They have missing or repeated frames even if they do get split on I-frames.
+6. There are some codec/container combinations that seem generally problematic for ffmpeg.
+    This might be due to something very non-stardard in the files or problems in ffmpeg itself.
+    Those are mostly using some less common codec or container.
+    The most "normal" combination that caused such problems seems to be VP9 in a MP4 container.
