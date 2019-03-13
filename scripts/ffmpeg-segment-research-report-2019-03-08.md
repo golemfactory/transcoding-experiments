@@ -31,6 +31,7 @@ Table of contents:
     2. [Methods tested](#methods-tested)
     3. [Gathered information](#gathered-information-1)
     4. [Conclusions](#conclusions-1)
+    5. [Frame types at split points](#frame-types-at-split-points)
 8. [Frame shift in merged `gada.mp4`](#8-frame-shift-in-merged-gadamp4)
     1. [Input](#input)
     2. [Observations](#observations-2)
@@ -1465,6 +1466,88 @@ Extra observations:
 - Concat protocol merge does not work correctly for these .mp4 files without any additional processing (e.g. converting them into MPEG-TS streams).
     It seems to just take one segment and ignore the others.
 - Concat demuxer merge adds more extra frames on top of the ones already added by the splitter.
+
+### Frame types at split points
+Here's how the input seek method splits a few selected files.
+Files were produced by the `ss-split-only` experiment with splitting into 5 fragments.
+
+- `ForBiggerBlazes-[codec=h264].mp4`
+    ```
+    segment 1 IPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPIPPPPPPPPPPP
+    segment 2 PPPPPPIIIIIPPPPPPPPPPPPPPPPIPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPIPPPPPPP
+    segment 3 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPIPPPPPPPPPPPPPPPPPPP
+    segment 4 PPPPIPIPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPIPPPPP
+    segment 5 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPIPPPPPPPPPPPPPPPPP
+    segment 6
+    ```
+    - Segment frame types match the types and the number of frames in the input file exactly.
+    - There are more frames in the segments than in the input file.
+    - The last segment has no frames according to ffprobe.
+- `star_trails-[codec=wmv2].wmv`
+    ```
+    segment 1 IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPP
+    segment 2 IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPP
+    segment 3 IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPP
+    segment 4 IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPP
+    segment 5 IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPP
+    segment 6 IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPP
+    ```
+    ```
+    input     IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPP
+              IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPP
+              IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPP
+              IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPP
+              IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPP
+              IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPP
+    ```
+    - Segment frame types do not match the types in the input file.
+        - Segments 1, 2, 3 and 5 have extra I- and P-frames at the end.
+        - Segment 4 is missing several P-frames.
+        - Other frame types are identical.
+- `TRA3106-[codec=h263].3gp`
+    ```
+    segment 1 IPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPIPPIPPIPPPPPPPPPPPIP
+    segment 2 PPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPIPPPPPPPPPPPIPPPIPPPPPPPPPPPIPPPPP
+    segment 3 PPPPPPIPPPPPPPIPPPPPPPPPPPIPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPIPPPPPPPPPPPIPPPPPPIPPPPPPPPP
+    segment 4 PPIPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPIPIPPPPPIPIPPPIPIPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPIPP
+    segment 5 PPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPP
+    segment 6 PPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPPPPPPIPPPPPPP
+    ```
+    - Segment frame types match the types and the number of frames in the input file exactly.
+- `gada-100-first-segment.mp4`
+    ```
+    segment 1 IPPPBPBPPBPBPBPBBPBBPBPBPBPBPBPBBPBPPBBPPBBPBBPBBPBPBBPBPBPPIPPBBPBBPBBPPBBPP
+    segment 2 PPPPBBPBBPBBPPBPBBPPBBPBBPBPPIPBBPBPBPBPPBBPBPBBPBPBPIPBPBBPPBPBBPBPBBPBPPBP
+    segment 3 PBPBPBPBPBPBPBPBPBPBBPBPBBPPIBPBPBBPBPBPBPBPBPBBPBBPBBPBPBBPBPBPBBPBBPBBPBBPP
+    segment 4 PPBBPPBPBBPBBPBBPBPBPBPBPPBBPBPIBPBPBBPBBPBPBPPIPBPPPBPPBPBPPPPPPPBPPPBPBPPBP
+    segment 5 BPPBPPPBPPPPPPPBPPIBPPPPPPPPBPPPPBPBPPPPBPPPPBPPBPPBPBPBBPBPBBPBPBPBBPBBPBPB
+    segment 6 BBPPBBPBP
+    ```
+    ```
+    input     IPPPBPBPPBPBPBPBBPBBPBPBPBPBPBPBBPBPPBBPPBBPBBPBBPBPBBPBPBPPIPPBBPBBPBBPPBB
+              PPPPBBPBBPBBPPBPBBPPBBPBBPBPPIPBBPBPBPBPPBBPBPBBPBPBPIPBPBBPPBPBBPBPBBPBPPB
+              PBPBPBPBPBPBPBPBPBPBBPBPBBPPIBPBPBBPBPBPBPBPBPBBPBBPBBPBPBBPBPBPBBPBBPBBPBB
+              PPBBPPBPBBPBBPBBPBPBPBPBPPBBPBPIBPBPBBPBBPBPBPPIPBPPPBPPBPBPPPPPPPBPPPBPBPP
+              BPPBPPPBPPPPPPPBPPIBPPPPPPPPBPPPPBPBPPPPBPPPPBPPBPPBPBPBBPBPBBPBPBPBBPBBPBP
+              BBPPBBPBP
+    ```
+    - Segment frame types do not match the types in the input file.
+        - The only difference are the extra 1-2 frames at the end of each segment.
+            The other types are identical.
+    - There are more frames in the segments than in the input file.
+    - This file was encoded with H.264, just like `ForBiggerBlazes-[codec=h264].mp4`.
+
+#### Observations
+- For some files input split correctly splits on I-frames, for others it does not.
+    If often splits between P-frames or B-frames.
+    - It does not seem to depend just on codec/container.
+- This split method often splits between P-frames or B-frames.
+- This split method can produce empty segments.
+- This split method keeps most of the frame types in each segment identical with to the input file but often adds extra frames at the end.
+    - Those are most likely repeated frames from the next segment but I have not verified that by diffing them.
+    - Sometimes it removes the last frame of a segment but adding frames is much more common.
+    - This sometimes happens and sometiemes does not.
+        It does not seem to depend on whether split was on I-frames or not or on the codec/container combination.
 
 ## 8. Frame shift in merged `gada.mp4`
 ### Input
