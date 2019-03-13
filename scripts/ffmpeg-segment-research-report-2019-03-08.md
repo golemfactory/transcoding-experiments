@@ -2,12 +2,13 @@
 Table of contents:
 1. [ffmpeg version](#1-ffmpeg-version)
 2. [Test videos used in experiments](#2-test-videos-used-in-experiments)
-    1. [Columns](#columns)
-    2. [Generated videos with numbered frames](#generated-videos-with-numbered-frames)
-    3. [Videos from the `transcoding experiments` repository](#videos-from-the-transcoding-experiments-repository)
-    4. [Problematic videos provided by the CGI team](#problematic-videos-provided-by-the-cgi-team)
-    5. [Miscellaneous videos](#miscellaneous-videos)
-    6. [Observations](#observations)
+    1. [Codecs used in test videos](#codecs-used-in-test-videos)
+    2. [Columns](#columns)
+    3. [Generated videos with numbered frames](#generated-videos-with-numbered-frames)
+    4. [Videos from the `transcoding experiments` repository](#videos-from-the-transcoding-experiments-repository)
+    5. [Problematic videos provided by the CGI team](#problematic-videos-provided-by-the-cgi-team)
+    6. [Miscellaneous videos](#miscellaneous-videos)
+    7. [Observations](#observations)
 3. [Split&merge reports for tested files](#3-splitmerge-reports-for-tested-files)
     1. [Tested methods](#tested-methods)
     2. [Video duration and start time reports](#video-duration-and-start-time-reports)
@@ -59,6 +60,42 @@ ffmpeg version n4.1.1 Copyright (c) 2000-2019 the FFmpeg developers
 This does not necessarily mean that the result of split and merge in these experiments was correct.
 "bad" files are the ones that caused severe ffmpeg errors and it was not possible to gather sensible data for them.
 They might be usable with some extra options or preprocessing but it was not investigated yet.
+
+### Codecs used in test videos
+| ffmpeg codec tag | Description                                                  |
+|------------------|--------------------------------------------------------------|
+| av1              | Alliance for Open Media AV1                                  |
+| cinepak          | Cinepak                                                      |
+| dirac            | Dirac                                                        |
+| flv1             | FLV / Sorenson Spark / Sorenson H.263 (Flash Video)          |
+| h261             | H.261                                                        |
+| h263             | H.263 / H.263-1996, H.263+ / H.263-1998 / H.263 version 2    |
+| h263p            | H.263+ / H.263-1998 / H.263 version 2                        |
+| h264             | H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10                    |
+| hevc             | H.265 / HEVC (High Efficiency Video Coding)                  |
+| mjpeg            | Motion JPEG                                                  |
+| mpeg1video       | MPEG-1 video                                                 |
+| mpeg2video       | MPEG-2 video                                                 |
+| mpeg4            | MPEG-4 part 2                                                |
+| theora           | Theora                                                       |
+| vp8              | On2 VP8                                                      |
+| vp9              | Google VP9                                                   |
+| wmv1             | Windows Media Video 7                                        |
+| wmv2             | Windows Media Video 8                                        |
+| huffyuv          | HuffYUV                                                      |
+| msmpeg4v2        | MPEG-4 part 2 Microsoft variant version 2                    |
+| msmpeg4v3        | MPEG-4 part 2 Microsoft variant version 3                    |
+| svq1             | Sorenson Vector Quantizer 1 / Sorenson Video 1 / SVQ1        |
+| v210             | Uncompressed 4:2:2 10-bit                                    |
+| v308             | Uncompressed packed 4:4:4                                    |
+| v408             | Uncompressed packed QT 4:4:4:4                               |
+| v410             | Uncompressed 4:4:4 10-bit                                    |
+| y41p             | Uncompressed YUV 4:1:1 12-bit                                |
+| yuv4             | Uncompressed packed 4:2:0                                    |
+| rv10             | RealVideo 1.0                                                |
+| rv20             | RealVideo 2.0                                                |
+| rawvideo         | raw video                                                    |
+| dvvideo          | DV (Digital Video)                                           |
 
 ### Columns
 | column         | description                                                                             |
