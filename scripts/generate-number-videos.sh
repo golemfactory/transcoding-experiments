@@ -62,8 +62,8 @@ generate_number_video default cinepak    cpk   # Cinepak
 generate_number_video default dirac      mkv   # Dirac
 generate_number_video default dirac      mp4
 generate_number_video default dirac      avi
-generate_number_video default flv1       flv
-generate_number_video default flv1       mkv   # FLV / Sorenson Spark / Sorenson H.263 (Flash Video)
+generate_number_video default flv1       flv   # FLV / Sorenson Spark / Sorenson H.263 (Flash Video)
+generate_number_video default flv1       mkv
 generate_number_video default flv1       avi
 generate_number_video h263    h263       3gp   # H.263 / H.263-1996, H.263+ / H.263-1998 / H.263 version 2
 generate_number_video default h264       mp4   # H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10
@@ -73,7 +73,7 @@ generate_number_video default h264       flv
 generate_number_video default hevc       mp4   # H.265 / HEVC (High Efficiency Video Coding)
 generate_number_video default hevc       mkv
 generate_number_video default hevc       mpeg
-generate_number_video default mjpeg      avi    # Motion JPEG (decoders: mjpeg mjpeg_cuvid )
+generate_number_video default mjpeg      avi    # Motion JPEG
 generate_number_video default mjpeg      mov
 generate_number_video default mjpeg      mkv
 generate_number_video default mpeg1video mpeg  # MPEG-1 video
