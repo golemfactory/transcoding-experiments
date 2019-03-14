@@ -17,7 +17,7 @@ Table of contents:
 4. [Analysis of bad files](#4-analysis-of-bad-files)
     1. [Overview of observed problems](#overview-of-observed-problems)
     2. [Generated videos with numbered frames](#generated-videos-with-numbered-frames-1)
-    3. [Videos from the `transcoding_experiments` repository](#videos-from-the-transcoding-experiments-repository-1)
+    3. [Videos from the `transcoding_experiments` repository](#videos-from-the-transcoding_experiments-repository-1)
 5. [Frame types in the test videos](#5-frame-types-in-the-test-videos)
     1. [Frame types in the shorter videos](#frame-types-in-the-shorter-videos)
     2. [Frame type changes during split, transcoding and merge](#frame-type-changes-during-split-transcoding-and-merge)
