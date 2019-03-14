@@ -5,7 +5,7 @@ Table of contents:
     1. [Codecs used in test videos](#codecs-used-in-test-videos)
     2. [Columns](#columns)
     3. [Generated videos with numbered frames](#generated-videos-with-numbered-frames)
-    4. [Videos from the `transcoding_experiments` repository](#videos-from-the-transcoding-experiments-repository)
+    4. [Videos from the `transcoding_experiments` repository](#videos-from-the-transcoding_experiments-repository)
     5. [Problematic videos provided by the CGI team](#problematic-videos-provided-by-the-cgi-team)
     6. [Miscellaneous videos](#miscellaneous-videos)
     7. [Observations](#observations)
