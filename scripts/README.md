@@ -66,3 +66,25 @@ The mosaics (especially the one made of diff frames) show at a glance whether th
 ./dump-frame-diff.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4 beach-split/diff 10
 ./frame-mosaic-diff.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4 beach-split/mosaic
 ```
+
+### Transcoding benchmark
+
+#### ffmpeg-transcoding-benchmark.sh
+``` bash
+./ffmpeg-transcoding-benchmark.sh <input_file> <output_dir>
+```
+
+Uses ffmpeg to transcode specified file to a series of different codecs, measures the time of each operation and and prints a short report.
+
+The slowest codecs are tested last - some of them (most notably AV1) take a very long time even for very small files.
+
+The selection of codecs is quite arbitrary but includes the most popular ones.
+Different sets of codecs can be tested by modifying the list in the script.
+
+`<output_dir>` is used to store the transcoded files so that they can be inspected.
+
+#### Examples
+
+``` bash
+./ffmpeg-transcoding-benchmark.sh Beach.mp4 /tmp/output
+```
