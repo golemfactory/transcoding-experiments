@@ -4,6 +4,7 @@ source functions/report-builder.sh
 source functions/report-columns.sh
 source functions/report-column-helpers.sh
 source functions/report-column-sets.sh
+source functions/runner-helpers.sh
 source functions/split-and-merge.sh
 source functions/transcoding.sh
 source functions/video-info.sh

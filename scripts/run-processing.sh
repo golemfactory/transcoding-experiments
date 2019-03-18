@@ -8,17 +8,6 @@ output_dir="$3"
 
 video_files="$(find "$input_dir" -mindepth 1 -maxdepth 1)"
 
-mkdir --parents "$output_dir"
-
-function run_experiment {
-    local experiment_name="$1"
-    local video_file="$2"
-
-    echo "Running experiment '$experiment_name' on $video_file"
-    experiments/$experiment_name.sh "$num_segments" "$video_file" "$output_dir"
-    echo
-}
-
 experiments=(
     segment-split-only
     ss-split-only
@@ -28,7 +17,5 @@ experiments=(
     segment-split-concat-protocol-merge-half-scale
 )
 for experiment in ${experiments[@]}; do
-    for video_file in $video_files; do
-        run_experiment $experiment "$video_file"
-    done
+    run_experiment_on_all_videos "$num_segments" "$experiment" "$output_dir" "$video_files"
 done
