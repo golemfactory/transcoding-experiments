@@ -49,3 +49,10 @@ This directory also contains the manually created report with analysis of the re
         ./run-experiment-set.sh 5 input output ffmpeg-ss-and-concat-protocol-2019-03-08
         ```
     - Note: one failure interrupts all the experiments and prevents the report from being printed so it's recommended to use smaller batches of the input files and run the experiment set separately on each one.
+
+### Other experiment sets
+#### ffmpeg-segment-separate-audio
+Runs experiments with separate audio, not included in the 2019-03-08 report.
+``` bash
+./run-experiment-set.sh 5 input output ffmpeg-segment-separate-audio
+```
