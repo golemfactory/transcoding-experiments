@@ -88,3 +88,28 @@ Different sets of codecs can be tested by modifying the list in the script.
 ``` bash
 ./ffmpeg-transcoding-benchmark.sh Beach.mp4 /tmp/output
 ```
+
+### Generating syntnetic videos using various codecs and containters
+#### generate-number-videos.sh
+Usage:
+```
+./generate-number-videos.sh <num_frames> <gop_size>
+```
+
+Uses ImageMagick to generate a PNG image sequence consisting of `<num_frames>` images with subsequent numbers, starting at 1.
+Then uses the images as input for `ffmpeg` to generate 25 FPS videos without audio track.
+
+`<gop_size>` is the size of a single [Group of Pictues](https://en.wikipedia.org/wiki/Group_of_pictures) in the resulting video.
+A GOP always starts with an I-frame so setting a lower value ensures that there are enough I-frames to make splitting a video into more segments possible without transcoding.
+The default value is 25.
+Note that not all codecs respect this value.
+
+The set of codecs and containers is hard-coded in the script.
+They were chosen arbitrarily, based on what `ffmpeg -codecs` and `ffmpeg -formats` report, but with emphasis on more popular combinations, with some less popular ones sprinkled in.
+
+The script leaves numbered frames in `number-frames/` and videos in `number-videos/`.
+
+#### Examples
+``` bash
+./generate-number-videos.sh 10000 25
+```
