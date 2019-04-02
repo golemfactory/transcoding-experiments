@@ -54,6 +54,7 @@ function ffmpeg_input_ss {
         "$output_file"
 }
 
+
 function ffmpeg_input_ss_loop {
     local segment_duration="$1"
     local video_duration="$2"
@@ -129,6 +130,62 @@ function ffmpeg_concat_protocol {
         -c    copy                        \
         "$absolute_output_path"
     popd > /dev/null
+}
+
+
+function ffmpeg_extract_video_streams {
+    local input_file="$1"
+    local video_only_file="$2"
+
+    num_streams=$(ffprobe_show_entries "$input_file" format=nb_streams)
+    num_video_streams=$(count_streams video "$input_file")
+
+    if [[ "$num_video_streams" > 1 ]]; then
+        echo "WARNING: Multiple video streams found in: $input_file"
+    fi
+
+    if [[ "$num_video_streams" == 0 ]]; then
+        echo "WARNING: No video streams found in $input_file"
+    fi
+
+    echo "Extracting video streams: num_streams=$num_streams; num_video_streams=$num_video_streams; input=$input_file"
+
+    ffmpeg                   \
+        -nostdin             \
+        -hide_banner         \
+        -v      error        \
+        -i     "$input_file" \
+        -map   0:v           \
+        -codec copy          \
+        "$video_only_file"
+}
+
+
+function ffmpeg_insert_video_streams {
+    local input_file="$1"
+    local video_only_file="$2"
+    local output_file="$3"
+
+    num_streams_in_video_only_file=$(ffprobe_show_entries "$video_only_file" format=nb_streams)
+    num_video_streams_in_video_only_file=$(count_streams video "$video_only_file")
+
+    if [[ "$num_streams_in_video_only_file" != "$num_video_streams_in_video_only_file" ]]; then
+        echo "WARNING: $video_only_file contains non-video streams. They will be included in the output."
+    fi
+
+    echo "Inserting video streams into the video file."
+
+    ffmpeg                        \
+        -nostdin                  \
+        -hide_banner              \
+        -v     error              \
+        -i     "$input_file"      \
+        -i     "$video_only_file" \
+        -map   1                  \
+        -map   0                  \
+        -map   -0:v               \
+        -codec copy               \
+        "$output_file"
 }
 
 
