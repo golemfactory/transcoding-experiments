@@ -56,3 +56,12 @@ Runs experiments with separate audio, not included in the 2019-03-08 report.
 ``` bash
 ./run-experiment-set.sh 5 input output ffmpeg-segment-separate-audio
 ```
+
+#### video-info
+Produces a report with basic information about the input files.
+
+``` bash
+./run-experiment-set.sh 5 input output video-info
+```
+
+It still runs a split/merge operation but only to produce intermediate files from which the `input_file_info_report` gathers the information.
