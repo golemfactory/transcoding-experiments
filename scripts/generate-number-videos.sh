@@ -37,13 +37,15 @@ function generate_number_video {
 
     echo "Generating number-videos/numbers-$num_frames-gop-$gop_size-$codec.$format"
 
-    ffmpeg                                                       \
-        -nostdin                                                 \
-        -v      error                                            \
-        -i      "number-frames/$frame_prefix-$num_frames-%d.png" \
-        -vcodec "$codec"                                         \
-        -g      "$gop_size"                                      \
-        -strict -2                                               \
+    # NOTE: `-v error` has no effect on the x265 encoder. It needs to be silenced separately via `-x265-params`.
+    ffmpeg                                                            \
+        -nostdin                                                      \
+        -v           error                                            \
+        -i           "number-frames/$frame_prefix-$num_frames-%d.png" \
+        -vcodec      "$codec"                                         \
+        -g           "$gop_size"                                      \
+        -strict      -2                                               \
+        -x265-params log-level=error                                  \
         "number-videos/numbers-$num_frames-gop-$gop_size-$codec.$format"
 }
 
