@@ -113,3 +113,22 @@ function load_frame_types_for_video {
 
     cat "$(strip_extension "$video_file")-frame-types.txt"
 }
+
+
+function count_streams {
+    codec_type="$1"
+    input_file="$2"
+
+    num_streams=$(ffprobe_show_entries "$input_file" format=nb_streams)
+
+    result=0
+    for i in $(seq 0 $(( $num_streams - 1 ))); do
+        current_codec_type="$(ffprobe_get_stream_attribute "$input_file" $i codec_type)"
+
+        if [[ "$current_codec_type" == "$codec_type" ]]; then
+            result=$(( $result + 1 ))
+        fi
+    done
+
+    printf "%d" $result
+}

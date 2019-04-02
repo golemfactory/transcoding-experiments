@@ -19,6 +19,50 @@ function init_experiment_dir {
 }
 
 
+function extract_video_and_replace_input {
+    local experiment_dir="$1"
+    local extract_command="$2"
+
+    local input_format="$(cat "$experiment_dir/input-format")"
+    local input_file="$experiment_dir/input.$input_format"
+    local input_file_all="$experiment_dir/input-all.$input_format"
+    local input_file_video="$experiment_dir/input-video.$input_format"
+
+    mv            "$input_file"              "$input_file_all"
+    ln --symbolic "input-video.$input_format" "$input_file"
+
+    $extract_command      \
+        "$input_file_all" \
+        "$input_file_video"
+}
+
+
+function insert_video_and_replace_output {
+    local experiment_dir="$1"
+    local insert_command="$2"
+
+    local input_format="$(cat "$experiment_dir/input-format")"
+    local input_file="$experiment_dir/input.$input_format"
+    local input_file_all="$experiment_dir/input-all.$input_format"
+
+    local output_format="$(cat "$experiment_dir/output-format")"
+    local output_file="$experiment_dir/merged.$output_format"
+    local output_file_all="$experiment_dir/merged-all.$output_format"
+    local output_file_video="$experiment_dir/merged-video.$output_format"
+
+    mv            "$output_file"              "$output_file_video"
+    ln --symbolic "merged-all.$output_format" "$output_file"
+
+    $insert_command          \
+        "$input_file_all"    \
+        "$output_file_video" \
+        "$output_file_all"
+
+    # Now we can also make the input link point at the original input video with all streams
+    ln --symbolic --force "input-all.$input_format" "$input_file"
+}
+
+
 function split_input {
     local experiment_dir="$1"
     local split_command="$2"
