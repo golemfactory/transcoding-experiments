@@ -47,6 +47,15 @@ Then it also uses `ffmpeg` to compute the difference between the frames in the t
 The output is stored in subdirectories of `<output_dir>`.
 Since the full PNG images are big and there are a lot of them, the `<duration>` argument specifies the duration (in seconds) of the initial part of the video that should be processed.
 
+#### frame-mosaic-diff.sh
+``` bash
+./frame-mosaic-diff.sh <reference_file> <new_file> <output_dir>
+```
+
+Works similarly to `dump-frame-diff.sh` but instead of dumping full images, it only creates small thumbnails.
+Then it uses ImageMagick to create big PNG images composed of all the thumbnails - one for the reference file, one for the new file and one for the diff.
+The mosaics (especially the one made of diff frames) show at a glance whether the videos are completely different or almost identical.
+
 #### Examples
 ``` bash
 ./split-transcode-merge-with-ffmpeg-segment.sh Beach.mp4 beach-split 12
@@ -55,4 +64,5 @@ Since the full PNG images are big and there are a lot of them, the `<duration>` 
 ./show-ssim-and-psnr.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4
 ./visual-video-diff.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4
 ./dump-frame-diff.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4 beach-split/diff 10
+./frame-mosaic-diff.sh beach-split/Beach-transcoded.mp4 beach-split/Beach-merged-transcoded.mp4 beach-split/mosaic
 ```
