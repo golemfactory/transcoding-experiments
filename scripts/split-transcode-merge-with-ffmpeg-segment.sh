@@ -58,6 +58,7 @@ ffmpeg                                                 \
     -nostdin                                           \
     -v $log_level                                      \
     -f concat                                          \
+    -safe                         0                    \
     -i "$output_dir/transcoded/$input_prefix.ffconcat" \
     -c copy                                            \
     "$merged_file_name"

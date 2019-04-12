@@ -3,6 +3,7 @@ report_input_file_info_columns=(
     input_num_streams
     input_video_format
     input_video_codec
+    input_bitrate
     input_duration_rounded
     input_frame_count
     input_unique_frame_types

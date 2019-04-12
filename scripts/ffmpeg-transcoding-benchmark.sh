@@ -1,6 +1,7 @@
 #!/bin/bash -e
-
+cd ../ffmpeg-segment-experiments
 source functions/all.sh
+cd ../scripts
 
 input_file="$1"
 output_dir="$2"

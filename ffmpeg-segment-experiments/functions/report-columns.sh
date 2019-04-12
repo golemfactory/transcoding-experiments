@@ -61,6 +61,22 @@ function column_input_video_format_value {
 }
 
 
+# BITRATE
+
+declare -A column_input_bitrate
+column_input_bitrate[header]="bitrate"
+column_input_bitrate[length]=8
+column_input_bitrate[format]=%-${column_input_bitrate[length]}d
+
+
+function column_input_bitrate_value {
+    local experiment_dir="$1"
+
+    local input_file="$experiment_dir/input.$(cat "$experiment_dir/input-format")"
+    ffprobe_show_entries_pretty "$input_file" format=bit_rate
+}
+
+
 # FRAME COUNT
 
 declare -A column_input_frame_count
